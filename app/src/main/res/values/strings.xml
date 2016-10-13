@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">The Gradebook</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">District ID</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Go</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="splash_title">Codealizer Studios</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="login_prompt_username">Username</string>
+    <string name="login_prompt_password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="login_prompt_district_id_error">Invalid District Code</string>
+    <string name="login_prompt_rememberMe">Remember Me</string>
+    <string name="title_activity_main">Gradebook</string>
+    <string name="key_data_username">USERNAME</string>
+    <string name="key_data_password">PASSWORD</string>
+    <string name="key_data_district_info">DISTRICT_INFO</string>
+    <string name="key_data_student_information">STUDENT_INFO</string>
+    <string name="menu_gradebook_refresh_item_title">Refresh</string>
+    <string name="menu_gradebook_logout_item_title">Logout</string>
+    <string name="key_data_gradebook_information">GRADEBOOK_DATA</string>
+    <string name="key_data_is_logged_in">IS_LOGGED_IN</string>
+    <string name="key_data_server_cookies">COOKIES</string>
+    <string name="title_activity_course_details">Course</string>
+    <string name="title_activity_grades">Grades</string>
+    <string name="key_data_gradebook_data_stored">GRADEBOOK_DATA_STORED</string>
+    <string name="dialog_new_assignment_title">Assignment Name</string>
+    <string name="dialog_new_assignment_out_of_label">Out of (# points)</string>
+</resources>

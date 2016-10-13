@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@color/colorPrimaryDark"
+    android:id="@+id/toolbar_grade"
+    android:visibility="invisible"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Term Grade"
+        android:textColor="@color/md_white_1000"
+        android:textSize="18sp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:fontFamily="sans-serif-thin"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/progress_counter_green"
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:id="@+id/toolbar_section_grade"
+        android:textColor="@color/md_white_1000"
+        android:text="98.3%"/>
+
+</RelativeLayout>
