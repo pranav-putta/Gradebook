@@ -2,14 +2,20 @@ package net.codealizer.thegradebook.ui.login.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
@@ -25,6 +31,7 @@ public class DistrictFragment extends Fragment implements View.OnClickListener, 
 
     private static EditText districtCodeEditText;
     private static Button goButton;
+    private Button districtButton;
 
     public DistrictFragment() {
     }
@@ -32,7 +39,7 @@ public class DistrictFragment extends Fragment implements View.OnClickListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_login_district, container, false);
     }
 
@@ -41,6 +48,20 @@ public class DistrictFragment extends Fragment implements View.OnClickListener, 
         super.onStart();
         initialize();
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_login_action_search:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -82,12 +103,19 @@ public class DistrictFragment extends Fragment implements View.OnClickListener, 
     private void initialize() {
         districtCodeEditText = (EditText) getView().findViewById(R.id.district_id);
         goButton = (Button) getView().findViewById(R.id.accept_district_id_button);
+        districtButton = (Button) getView().findViewById(R.id.district_id_problem);
 
         LoginActivity.mActionBar.setDisplayHomeAsUpEnabled(false);
         LoginActivity.mActionBar.setDisplayShowHomeEnabled(false);
         LoginActivity.mActionBar.setTitle("Sign in");
 
         goButton.setOnClickListener(this);
+        districtButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Alert.showDistrictStateDialog(getActivity());
+            }
+        });
     }
 
 

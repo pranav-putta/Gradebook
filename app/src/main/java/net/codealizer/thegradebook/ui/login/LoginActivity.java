@@ -1,14 +1,20 @@
 package net.codealizer.thegradebook.ui.login;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import net.codealizer.thegradebook.R;
+import net.codealizer.thegradebook.ui.login.fragments.CredentialsFragment;
 import net.codealizer.thegradebook.ui.login.fragments.DistrictFragment;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         initialize();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -48,14 +55,27 @@ public class LoginActivity extends AppCompatActivity {
 
         mActionBar = getSupportActionBar();
 
-        DistrictFragment districtFragment = new DistrictFragment();
         mLoginFragmentManager = getSupportFragmentManager();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.login_container, districtFragment)
-                .addToBackStack("DistrictFragment")
-                .commit();
+        boolean b = getIntent().getBooleanExtra("hasDistrictCode", false);
+
+        if (!b) {
+            DistrictFragment districtFragment = new DistrictFragment();
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.login_container, districtFragment)
+                    .addToBackStack("DistrictFragment")
+                    .commit();
+        } else {
+            CredentialsFragment credentialsFragment = new CredentialsFragment();
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.login_container, credentialsFragment)
+                    .addToBackStack("CredentialsFragment")
+                    .commit();
+        }
     }
 
 }

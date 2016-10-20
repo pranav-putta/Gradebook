@@ -5,18 +5,29 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import net.codealizer.thegradebook.apis.ic.RequestTask;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.data.StateSuggestion;
+import net.codealizer.thegradebook.listeners.onAuthenticationListener;
+import net.codealizer.thegradebook.ui.gradebook.adapters.UpdatesPagerAdapter;
+import net.codealizer.thegradebook.ui.gradebook.fragments.UpdateDialogFragment;
+import net.codealizer.thegradebook.ui.login.DistrictSearchActivity;
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.calendar.Term;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
@@ -26,12 +37,14 @@ import net.codealizer.thegradebook.listeners.OnAssignmentAddedListener;
 import net.codealizer.thegradebook.listeners.OnAssignmentEdittedListener;
 import net.codealizer.thegradebook.ui.gradebook.cards.BasicClassbookActivity;
 import net.codealizer.thegradebook.ui.gradebook.cards.BasicGradeDetail;
-import net.codealizer.thegradebook.ui.gradebook.cards.BasicTerm;
 import net.codealizer.thegradebook.ui.gradebook.cards.BasicTermDetail;
+import net.codealizer.thegradebook.ui.login.LoginActivity;
 
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Pranav on 10/8/16.
@@ -50,6 +63,68 @@ public class Alert {
             }
         });
         builder.setNegativeButton("OK", null);
+        builder.create().show();
+    }
+
+    public static void showMessageDialog(Context c, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("Ok", null);
+        builder.create().show();
+    }
+
+    public static void showThemeSelectionDialog(Context ctx, List<Integer> colors, List<String> colorNames) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(ctx);
+        dialog.setTitle("Select Theme");
+        View v = LayoutInflater.from(ctx).inflate(R.layout.dialog_progress_information, null);
+        dialog.setPositiveButton("Ok", null);
+
+        dialog.setView(v);
+
+        RecyclerView r = (RecyclerView) v.findViewById(R.id.dialog_progress_information_list);
+        r.setHasFixedSize(true);
+        r.setLayoutManager(new LinearLayoutManager(ctx));
+        r.setAdapter(new ThemeDialogAdapter(ctx, colors, colorNames));
+
+        dialog.create().show();
+    }
+
+    public static void showDistrictClickedDialog(final Activity c, final StateSuggestion district) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Is this your district?");
+        builder.setMessage(district.getBody());
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                RequestTask background = new RequestTask(c, RequestTask.OPTION_SET_DISTRICT,
+                        Data.mCoreManager, new onAuthenticationListener() {
+                    @Override
+                    public void onAuthenticated() {
+                        Intent intent = new Intent(c, LoginActivity.class);
+                        intent.putExtra("hasDistrictCode", true);
+
+                        c.startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onUnauthorized() {
+                        Alert.showNetworkErrorDialog(c);
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+
+                    }
+                }, district.mDistrictCode);
+                background.execute();
+
+            }
+        });
+        builder.setNegativeButton("No", null);
         builder.create().show();
     }
 
@@ -292,5 +367,115 @@ public class Alert {
         }
 
         dialog.create().show();
+    }
+
+    public static void showDistrictStateDialog(final Activity context) {
+
+        final String KEY_TEXT = "text";
+        final String KEY_SUB_TEXT = "subText";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Select State");
+
+        View v = LayoutInflater.from(context).inflate(R.layout.dialog_district_state, null);
+
+        builder.setView(v);
+
+        final ArrayList<HashMap<String, String>> states = new ArrayList<>();
+        String statesArray[] = context.getResources().getStringArray(R.array.district_states);
+        final String statesAbrArray[] = context.getResources().getStringArray(R.array.district_states_abr);
+
+        for (int i = 0; i < statesArray.length; i++) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put(KEY_TEXT, statesArray[i]);
+            map.put(KEY_SUB_TEXT, statesAbrArray[i]);
+
+            states.add(map);
+        }
+
+        final Spinner statesSpinner = (Spinner) v.findViewById(R.id.dialog_district_state_spinner);
+        ArrayAdapter adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, statesArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+
+        statesSpinner.setAdapter(adapter);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(context, DistrictSearchActivity.class);
+
+                intent.putExtra(DistrictSearchActivity.KEY_STATE, statesAbrArray[statesSpinner.getSelectedItemPosition()]);
+                context.startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.create().show();
+
+    }
+
+    public static void showUpdates(final AppCompatActivity context, final ArrayList<Pair<String, ClassbookActivity>> activities) {
+        /** AlertDialog.Builder builder = new AlertDialog.Builder(context);
+         builder.setTitle("Updates");
+
+         View v = LayoutInflater.from(context).inflate(R.layout.dialog_updates, null);
+         builder.setView(v);
+
+         final ViewPager pager = (ViewPager) v.findViewById(R.id.updates_pager);
+         pager.setAdapter(new UpdatesPagerAdapter(context.getSupportFragmentManager(), activities));
+
+
+         builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialogInterface, int i) {
+
+        }
+        });
+         builder.setNegativeButton("Cancel", null);
+         builder.setNeutralButton("Back", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialogInterface, int i) {
+
+        }
+        });
+
+         final AlertDialog alert = builder.create();
+         alert.show();
+
+         alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        if (pager.getCurrentItem() < activities.size()) {
+        pager.setCurrentItem(pager.getCurrentItem() + 1);
+
+        if (pager.getCurrentItem() == activities.size() - 1) {
+        alert.setButton(DialogInterface.BUTTON_POSITIVE, "Done", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialogInterface, int i) {
+        alert.dismiss();
+        }
+        });
+        }
+
+        if (!alert.getButton(DialogInterface.BUTTON_NEUTRAL).isEnabled()) {
+        alert.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(true);
+        }
+        } else {
+        alert.dismiss();
+        }
+        }
+        });
+         alert.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        if (pager.getCurrentItem() > 0) {
+        pager.setCurrentItem(pager.getCurrentItem() - 1);
+        } else {
+        alert.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+        }
+        }
+        });**/
+        UpdateDialogFragment dialogFragment = new UpdateDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(UpdateDialogFragment.KEY_ACTIVITIES, activities);
+
+        dialogFragment.setArguments(args);
+        dialogFragment.show(context.getSupportFragmentManager(), "UpdateDialog");
     }
 }

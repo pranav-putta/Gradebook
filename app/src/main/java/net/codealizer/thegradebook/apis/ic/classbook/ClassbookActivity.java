@@ -1,12 +1,19 @@
 package net.codealizer.thegradebook.apis.ic.classbook;
 
 
+import android.text.Html;
+import android.text.Spanned;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.codealizer.thegradebook.ui.gradebook.cards.BasicClassbookActivity;
+import net.codealizer.thegradebook.ui.gradebook.cards.BasicGradeDetail;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -131,5 +138,29 @@ public class ClassbookActivity implements Serializable {
 
     public String getInfoString() {
         return name + "\t\t" + letterGrade + " " + weightedPercentage + "%" + "\t(" + score + "/" + (int) totalPoints + ")";
+    }
+
+    public Spanned getInfoString(String className) {
+        String percent;
+        String letter;
+
+        try {
+            percent = new DecimalFormat(".##").format((Float.parseFloat(score) / totalPoints) * 100);
+            letter = BasicGradeDetail.calculateGrade(percent);
+        } catch (Exception ex) {
+            percent = score;
+            letter = "";
+        }
+
+        if (!percent.equals(score)) {
+            if (letter != null && letter.contains("A")) {
+                return Html.fromHtml("You have earned an <strong>" + letter + " (" + percent + "%)</strong> for \"" + name + "\" in <strong>" + WordUtils.capitalize(className.toLowerCase()) + "</strong>");
+            } else {
+                return Html.fromHtml("You have earned a <strong>" + letter + " (" + percent + "%)</strong> for \"" + name + "\" in <strong>" + WordUtils.capitalize(className.toLowerCase()) + "</strong>");
+            }
+        } else {
+            return Html.fromHtml("You have earned a <strong>" + percent + "</strong> for \"" + name + "\" in <strong>" + WordUtils.capitalize(className.toLowerCase()) + "</strong>");
+
+        }
     }
 }

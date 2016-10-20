@@ -1,6 +1,7 @@
 package net.codealizer.thegradebook.ui.gradebook.adapters;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,6 +54,7 @@ public class GradesEbrRecyclerViewAdapter extends RecyclerView.Adapter<GradesEbr
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ClassbookTask group = task.get(position);
+        final Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
 
         holder.title.setText(group.name);
 
@@ -60,6 +62,7 @@ public class GradesEbrRecyclerViewAdapter extends RecyclerView.Adapter<GradesEbr
             @Override
             public void onClick(View view) {
                 mOnClickListener.onClassbookClicked(group);
+                v.vibrate(100);
             }
         });
     }

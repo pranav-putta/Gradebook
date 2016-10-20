@@ -11,6 +11,8 @@ import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
 import net.codealizer.thegradebook.apis.ic.student.Student;
 import net.codealizer.thegradebook.data.Data;
 import net.codealizer.thegradebook.data.ServiceManager;
+import net.codealizer.thegradebook.data.StateSuggestion;
+import net.codealizer.thegradebook.listeners.OnFindSuggestionsListener;
 import net.codealizer.thegradebook.listeners.OnGradebookRetrievedListener;
 import net.codealizer.thegradebook.listeners.OnICActionListener;
 import net.codealizer.thegradebook.listeners.OnStudentInformationRetrievedListener;
@@ -19,6 +21,7 @@ import net.codealizer.thegradebook.listeners.onAuthenticationListener;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.List;
 
 public class RequestTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -35,14 +38,19 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
     public static final int OPTION_RETRIEVE_STUDENT_INFO = 2;
     public static final int OPTION_RETRIEVE_GRADES_INFO = 3;
     public static final int OPTION_RELOAD_ALL = 4;
+    public static final int OPTION_SEARCH_DISTRICT = 5;
 
     private boolean networkError = false;
     private boolean gradebookerror = false;
+    private boolean searchError = false;
 
     private Context mContext;
 
     private Student student;
     private ClassbookManager gradebook;
+    private List<StateSuggestion> suggestions;
+
+    private boolean useProgressDialog = true;
 
     public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, String... param) {
         progressDialog = new ProgressDialog(ctx);
@@ -55,6 +63,20 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
         this.param = param;
         this.listener = listener;
         this.mContext = ctx;
+    }
+
+    public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, boolean useProgressDialog, String... param) {
+        progressDialog = new ProgressDialog(ctx);
+        progressDialog.setTitle("Loading Data");
+        progressDialog.setMessage("Please Wait");
+        progressDialog.setCancelable(false);
+
+        this.option = option;
+        this.mCoreManager = manager;
+        this.param = param;
+        this.listener = listener;
+        this.mContext = ctx;
+        this.useProgressDialog = useProgressDialog;
     }
 
     public RequestTask(Context ctx, CoreManager manager, int option, OnICActionListener listener, String progressTitle, String progressMessage, String... param) {
@@ -73,8 +95,9 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        progressDialog.show();
+        if (useProgressDialog) {
+            progressDialog.show();
+        }
     }
 
     @Override
@@ -106,6 +129,9 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
                     break;
                 case OPTION_RELOAD_ALL:
                     ((OnGradebookRetrievedListener) listener).onGradebookRetrieved(gradebook);
+                    break;
+                case OPTION_SEARCH_DISTRICT:
+                    ((OnFindSuggestionsListener) listener).onFindSuggestion(suggestions);
                     break;
             }
 
@@ -167,6 +193,14 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
                     } catch (IOException | JSONException e) {
                         gradebookerror = true;
                         e.printStackTrace();
+                    }
+                    break;
+                case OPTION_SEARCH_DISTRICT:
+                    try {
+                        suggestions = mCoreManager.searchDistricts(param[0], param[1]);
+                    } catch (IOException ex) {
+                        searchError = true;
+                        ex.printStackTrace();
                     }
             }
         } else {

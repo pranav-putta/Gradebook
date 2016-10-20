@@ -1,6 +1,7 @@
 package net.codealizer.thegradebook.ui.gradebook.adapters;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ClassbookActivity activity = activities.get(position);
+        final Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+
 
         holder.dueDate.setText(activity.dueDate);
         holder.title.setText(activity.name);
@@ -81,6 +84,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
                     score = "0";
                     s = 0;
                 }
+
+                v.vibrate(100);
 
 
                 BasicGradeDetail detail = new BasicGradeDetail(activity.name, activity.dueDate, score, format.format((s / activity.totalPoints) * 100),
@@ -117,12 +122,16 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
             holder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    v.vibrate(100);
+
                     Alert.showEditAssignmentScoreDialog(task, activity.getBasicActivity(), mContext, mListener, activity.index, activity.masterIndex);
                 }
             });
             holder.card.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    v.vibrate(100);
+
                     BasicGradeDetail detail = new BasicGradeDetail(activity.name, activity.dueDate, activity.score,
                             format.format((mScore / activity.totalPoints) * 100), String.valueOf(activity.weight), activity.comments, isEBR);
                     Alert.showProgressInformation(detail, mContext);

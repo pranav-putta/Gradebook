@@ -181,6 +181,33 @@ public class Term implements Serializable {
         return activities;
     }
 
+    public ArrayList<Pair<String, ClassbookActivity>> getAllActivities(String className) {
+        ArrayList<Pair<String, ClassbookActivity>> activities = new ArrayList<>();
+
+        if (mTask != null) {
+            if (mTask.groups != null) {
+                for (ClassbookGroup group : mTask.groups) {
+                    for (ClassbookActivity activity : group.activities) {
+                        activities.add(new Pair<>(className, activity));
+                    }
+                }
+            }
+        } else if (mClassbookTasks != null) {
+            for (ClassbookTask task : mClassbookTasks) {
+                if (task.groups != null) {
+                    for (ClassbookGroup group : task.groups) {
+                        for (ClassbookActivity activity : group.activities) {
+                            activities.add(new Pair<>(className, activity));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return activities;
+    }
+
     public ArrayList<Pair<Integer, String>> getCategories() {
         int i = 0;
         ArrayList<Pair<Integer, String>> categories = new ArrayList<>();

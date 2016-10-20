@@ -3,11 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/gradebookLogoutItem"
         android:title="@string/menu_gradebook_logout_item_title"
-        app:showAsAction="never"
-        android:id="@+id/gradebookLogoutItem" />
-    <item android:title="@string/menu_gradebook_refresh_item_title"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/gradebookRefreshItem"
         android:icon="@android:drawable/stat_notify_sync_noanim"
-        android:showAsAction="always"
-        android:id="@+id/gradebookRefreshItem" />
+        android:title="@string/menu_gradebook_refresh_item_title"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/gradebookThemeItem"
+        android:title="Theme"
+        app:showAsAction="never" />
 </menu>

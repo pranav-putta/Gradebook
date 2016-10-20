@@ -49,9 +49,12 @@ public class Student {
         if (userElement.has("isGuardian"))
             isGuardian = userElement.get("isGuardian").getAsString();
 
-        for (int i = 0; i < userElement.get("Calendar").getAsJsonArray().size(); i++)
-            calendars.add(new Calendar(userElement.get("Calendar").getAsJsonArray().get(i).getAsJsonObject()));
-
+        if (userElement.get("Calendar").isJsonArray()) {
+            for (int i = 0; i < userElement.get("Calendar").getAsJsonArray().size(); i++)
+                calendars.add(new Calendar(userElement.get("Calendar").getAsJsonArray().get(i).getAsJsonObject()));
+        } else {
+            calendars.add(new Calendar(userElement.get("Calendar").getAsJsonObject()));
+        }
     }
 
 

@@ -13,6 +13,8 @@ import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
 import net.codealizer.thegradebook.apis.ic.student.Student;
 import net.codealizer.thegradebook.ui.splash.SplashActivity;
 
+import java.util.ArrayList;
+
 /**
  * Created by Pranav on 10/8/16.
  */
@@ -55,6 +57,9 @@ public class Data {
     public static void logout(Activity activity) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         prefs.edit().clear().apply();
+
+        mCoreManager = new CoreManager();
+        reloadedOnce = false;
 
         Intent intent = new Intent(activity, SplashActivity.class);
         activity.startActivity(intent);

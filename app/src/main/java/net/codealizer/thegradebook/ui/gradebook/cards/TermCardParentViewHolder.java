@@ -53,13 +53,7 @@ public class TermCardParentViewHolder extends ParentViewHolder {
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isExpanded()) {
-                    moreInfo.setText("More Info");
-                    collapseView();
-                } else {
-                    moreInfo.setText("Less");
-                    expandView();
-                }
+               assignments.callOnClick();
             }
         });
 

@@ -69,14 +69,11 @@ public class CourseDetailsActivity extends AppCompatActivity {
         //Setup Tabs
         TabLayout tabLayout = (TabLayout) findViewById(R.id.gradebook_tabs);
 
-
-
         viewPager = (ViewPager) findViewById(R.id.pager);
         adapter = new CourseDetailsPagerAdapter(getSupportFragmentManager(), mClassbook.getSemesters().size(), mClassbook, mCourse, mPosition);
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
-
 
 
     }

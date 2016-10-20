@@ -1,19 +1,27 @@
 package net.codealizer.thegradebook.apis.ic;
 
 import android.content.Context;
+import android.util.Pair;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import net.codealizer.thegradebook.apis.ic.calendar.Semester;
+import net.codealizer.thegradebook.apis.ic.calendar.Term;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 import net.codealizer.thegradebook.apis.ic.classbook.Course;
 import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
 import net.codealizer.thegradebook.apis.ic.student.Student;
 import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.StateSuggestion;
 
 import org.json.JSONException;
 import org.json.XML;
@@ -88,6 +96,20 @@ public class CoreManager {
 
 
         return true;
+    }
+
+    public ArrayList<Pair<String, ClassbookActivity>> getAllActivities() {
+        ArrayList<Pair<String, ClassbookActivity>> activities = new ArrayList<>();
+
+        for (PortalClassbook classbook : gradebookManager.portalclassbooks) {
+            for (Semester semester : classbook.getSemesters()) {
+                for (Term term : semester.getTerms()) {
+                    activities.addAll(term.getAllActivities(classbook.getCourse().getCourseName()));
+                }
+            }
+        }
+
+        return activities;
     }
 
     /**
@@ -184,6 +206,28 @@ public class CoreManager {
         retrieveStudentInformation();
 
         return reloadData(c);
+    }
+
+    public ArrayList<StateSuggestion> searchDistricts(String query, String state) throws IOException {
+        query = query.replace(" ", "%20");
+
+        String url = "https://mobile.infinitecampus.com/mobile/searchDistrict?query=" + query + "&state=" + state;
+        URL mUrl = new URL(url);
+        String json = getContent(mUrl, false);
+
+        if (json.contains("data")) {
+            JsonArray schoolData = new JsonParser().parse(json).getAsJsonObject().getAsJsonArray("data");
+
+            ArrayList<StateSuggestion> suggestions = new ArrayList<>();
+
+            for (JsonElement school : schoolData) {
+                suggestions.add(new StateSuggestion(school.getAsJsonObject()));
+            }
+
+            return suggestions;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private String getContent(URL url, boolean altercookies) throws UnknownHostException, IOException {

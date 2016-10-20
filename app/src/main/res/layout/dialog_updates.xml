@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.codealizer.thegradebook.ui.gradebook.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Updates"
+        android:id="@+id/updates_title"
+        style="@style/Base.TextAppearance.AppCompat.Title"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/updates_pager"
+        android:layout_below="@id/updates_title"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="95dp" />
+
+    <Button
+        android:id="@+id/updates_next"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/updates_pager"
+        android:text="Next"
+        android:textColor="?attr/colorAccent" />
+
+    <Button
+        android:id="@+id/updates_back"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updates_pager"
+        android:layout_toLeftOf="@id/updates_next"
+        android:layout_toStartOf="@id/updates_next"
+        android:text="Back"
+        android:textColor="?attr/colorAccent" />
+
+    <Button
+        android:id="@+id/updates_cancel"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/updates_pager"
+        android:text="Done"
+        android:textColor="?attr/colorAccent" />
+
+</RelativeLayout>

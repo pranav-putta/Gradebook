@@ -9,7 +9,7 @@ import java.util.Collections;
 
 
 public class ClassbookManager implements Serializable {
-    ArrayList<PortalClassbook> portalclassbooks = new ArrayList<PortalClassbook>();
+    public ArrayList<PortalClassbook> portalclassbooks = new ArrayList<PortalClassbook>();
     private String json;
 
     private int clubs;
@@ -63,6 +63,8 @@ public class ClassbookManager implements Serializable {
         }
         return null;
     }
+
+
 
     public String getJson() {
         return json;
