@@ -1,6 +1,6 @@
 package net.codealizer.thegradebook.listeners;
 
-import net.codealizer.thegradebook.ui.gradebook.cards.BasicClassbookActivity;
+import net.codealizer.thegradebook.assets.BasicClassbookActivity;
 
 /**
  * Created by Pranav on 10/12/16.

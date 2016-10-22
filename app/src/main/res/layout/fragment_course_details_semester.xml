@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="16dp"
-    tools:context="net.codealizer.thegradebook.ui.gradebook.fragments.CourseDetailSemesterFragment">
+    tools:context="net.codealizer.thegradebook.ui.classbook.fragments.CourseDetailSemesterFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/term_cards"

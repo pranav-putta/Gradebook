@@ -4,11 +4,10 @@ package net.codealizer.thegradebook.apis.ic.classbook;
 import android.text.Html;
 import android.text.Spanned;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.codealizer.thegradebook.ui.gradebook.cards.BasicClassbookActivity;
-import net.codealizer.thegradebook.ui.gradebook.cards.BasicGradeDetail;
+import net.codealizer.thegradebook.assets.BasicClassbookActivity;
+import net.codealizer.thegradebook.assets.BasicGradeDetail;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -16,8 +15,6 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
 
 public class ClassbookActivity implements Serializable {
     public String activityID;

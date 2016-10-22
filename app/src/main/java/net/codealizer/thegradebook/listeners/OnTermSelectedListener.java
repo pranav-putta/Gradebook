@@ -1,6 +1,6 @@
 package net.codealizer.thegradebook.listeners;
 
-import net.codealizer.thegradebook.apis.ic.calendar.Term;
+import net.codealizer.thegradebook.apis.ic.schedule.Term;
 
 /**
  * Created by Pranav on 10/10/16.

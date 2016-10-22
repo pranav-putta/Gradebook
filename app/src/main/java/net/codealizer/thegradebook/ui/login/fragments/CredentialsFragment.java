@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import net.codealizer.thegradebook.ui.gradebook.MainActivity;
+import net.codealizer.thegradebook.ui.classbook.MainActivity;
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;

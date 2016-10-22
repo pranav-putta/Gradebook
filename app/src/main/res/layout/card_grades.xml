@@ -68,7 +68,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/progress_counter_green"
+                android:background="@drawable/progress_counter_purple"
                 android:padding="10dp"
                 android:text="AG"
                 android:textAppearance="?android:textAppearanceInverse"

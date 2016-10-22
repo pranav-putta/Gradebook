@@ -7,15 +7,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import net.codealizer.thegradebook.apis.ic.calendar.Semester;
-import net.codealizer.thegradebook.apis.ic.calendar.Term;
+import net.codealizer.thegradebook.apis.ic.schedule.Semester;
+import net.codealizer.thegradebook.apis.ic.schedule.Term;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
-import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 import net.codealizer.thegradebook.apis.ic.classbook.Course;
 import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;

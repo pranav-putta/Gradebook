@@ -5,7 +5,7 @@
     android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.codealizer.thegradebook.ui.gradebook.MainActivity">
+    tools:context="net.codealizer.thegradebook.ui.classbook.MainActivity">
 
     <TextView
         android:layout_width="match_parent"

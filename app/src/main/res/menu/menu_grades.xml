@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.codealizer.thegradebook.ui.gradebook.GradesActivity">
+    tools:context="net.codealizer.thegradebook.ui.classbook.GradesActivity">
     <item
         android:id="@+id/action_add_fake_assignment"
         android:orderInCategory="100"

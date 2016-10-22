@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import net.codealizer.thegradebook.ui.gradebook.MainActivity;
+import net.codealizer.thegradebook.ui.classbook.MainActivity;
 import net.codealizer.thegradebook.data.Data;
 import net.codealizer.thegradebook.ui.login.LoginActivity;
 import net.codealizer.thegradebook.R;

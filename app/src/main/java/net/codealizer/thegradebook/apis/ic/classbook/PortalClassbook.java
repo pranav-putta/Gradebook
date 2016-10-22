@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.codealizer.thegradebook.apis.ic.calendar.Semester;
-import net.codealizer.thegradebook.apis.ic.calendar.Term;
+import net.codealizer.thegradebook.apis.ic.schedule.Semester;
+import net.codealizer.thegradebook.apis.ic.schedule.Term;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
