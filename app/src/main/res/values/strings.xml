@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">The Gradebook</string>
+    <!-- App Strings -->
+    <string name="app_name">Gradebook</string>
 
-    <!-- Strings related to login -->
+    <!-- Login Strings -->
     <string name="prompt_email">District ID</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="dialog_district_state_spinner_prompt">Select your state</string>
@@ -9,7 +10,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">Username or password incorrect.</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -148,30 +149,14 @@
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <!-- Main Activity Strings -->
+    <string name="wait_message">Please wait</string>
+    <string name="downloading_message">Downloading grade data...</string>
 
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <!-- Preference Manager Retrieval Keys -->
+    <string name="pref_key_notifications_new_message">notifications_new_message</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
 
     <!-- Example settings for SessionManager & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>

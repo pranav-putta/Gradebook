@@ -11,7 +11,7 @@ import net.codealizer.thegradebook.apis.ic.CoreManager;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
 import net.codealizer.thegradebook.apis.ic.student.Student;
-import net.codealizer.thegradebook.ui.splash.LaunchActivity;
+import net.codealizer.thegradebook.ui.launch.LaunchActivity;
 
 /**
  * Created by Pranav on 10/8/16.
