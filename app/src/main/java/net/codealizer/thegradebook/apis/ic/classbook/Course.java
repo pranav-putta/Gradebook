@@ -40,7 +40,7 @@ public class Course implements Serializable {
         }
 
         courseName = courseName.toLowerCase();
-        courseName = WordUtils.capitalize(courseName);
+        courseName = (courseName);
 
         String keys[] = {"ac", "hn", "pe"};
 
