@@ -39,9 +39,6 @@ public class Course implements Serializable {
             teacher = "Not available";
         }
 
-        courseName = courseName.toLowerCase();
-        courseName = (courseName);
-
         String keys[] = {"ac", "hn", "pe"};
 
         for (String key : keys) {
