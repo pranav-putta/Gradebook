@@ -1,12 +1,7 @@
 package net.codealizer.thegradebook.ui.login.fragments;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
 import net.codealizer.thegradebook.ui.login.LoginActivity;
@@ -91,7 +85,7 @@ public class DistrictFragment extends Fragment implements View.OnClickListener, 
 
         if (!districtCode.isEmpty() && districtCode.length() > 2) {
             RequestTask background = new RequestTask(getActivity(), RequestTask.OPTION_SET_DISTRICT,
-                    Data.mCoreManager, this,districtCode);
+                    SessionManager.mCoreManager, this, districtCode);
             background.execute();
         } else {
             districtCodeEditText.setError(getString(R.string.error_field_required));

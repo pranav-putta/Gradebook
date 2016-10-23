@@ -8,11 +8,17 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/gradebookRefreshItem"
-        android:icon="@android:drawable/stat_notify_sync_noanim"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/menu_gradebook_refresh_item_title"
         app:showAsAction="always" />
     <item
         android:id="@+id/gradebookThemeItem"
         android:title="Theme"
+        android:visible="false"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/gradebookSettingsItem"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom" />
 </menu>

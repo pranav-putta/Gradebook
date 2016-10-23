@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import net.codealizer.thegradebook.ui.classbook.MainActivity;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.ui.login.LoginActivity;
 import net.codealizer.thegradebook.R;
 
@@ -34,9 +34,9 @@ public class SplashActivity extends AppCompatActivity implements Runnable {
          *
          * If the student is not logged in, run the LoginActivity
          */
-        if (Data.isStudentLoggedIn(this)) {
+        if (SessionManager.isStudentLoggedIn(this)) {
             intent = new Intent(this, MainActivity.class);
-            Data.loadData(this);
+            SessionManager.loadData(this);
         } else {
             intent = new Intent(this, LoginActivity.class);
         }

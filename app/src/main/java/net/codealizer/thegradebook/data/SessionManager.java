@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by Pranav on 10/8/16.
  */
 
-public class Data {
+public class SessionManager {
 
     /**
      * Infinite Campus Core Manager Instance
@@ -36,7 +36,7 @@ public class Data {
      *
      * @param ac Context to access the Shared Preferences
      */
-    public static void loadData(Activity ac) {
+    public static void loadData(Context ac) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ac);
 
         String districtJson = prefs.getString(ac.getString(R.string.key_data_district_info), null);

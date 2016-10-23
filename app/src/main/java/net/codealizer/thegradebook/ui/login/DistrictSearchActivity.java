@@ -14,7 +14,7 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.data.StateSuggestion;
 import net.codealizer.thegradebook.listeners.OnFindSuggestionsListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
@@ -76,7 +76,7 @@ public class DistrictSearchActivity extends AppCompatActivity implements Floatin
         } else if (newQuery.length() > 3) {
             mSearchView.showProgress();
 
-            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, Data.mCoreManager, this, false, newQuery, mState);
+            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, this, false, newQuery, mState);
             task.execute();
 
         }
@@ -102,7 +102,7 @@ public class DistrictSearchActivity extends AppCompatActivity implements Floatin
     public void onSearchAction(String currentQuery) {
         noSearchResults.setVisibility(View.INVISIBLE);
         if (currentQuery.length() > 3) {
-            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, Data.mCoreManager, new OnFindSuggestionsListener() {
+            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, new OnFindSuggestionsListener() {
                 @Override
                 public void onFindSuggestion(List<StateSuggestion> suggestions) {
                     adapter = new ArrayAdapter<>(DistrictSearchActivity.this, android.R.layout.simple_list_item_1, (suggestions));

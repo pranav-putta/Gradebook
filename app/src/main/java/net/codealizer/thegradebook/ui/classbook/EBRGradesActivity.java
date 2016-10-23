@@ -101,6 +101,21 @@ public class EBRGradesActivity extends AppCompatActivity implements OnAssignment
             mSectionedAdapter.setSections(sections.toArray(dummy));
             mRecyclerView.setAdapter(mSectionedAdapter);
 
+            gradeToolbar.setVisibility(View.VISIBLE);
+
+            int profScore = GradesManager.calculateProfScore(task);
+
+            this.grade.setText(String.valueOf(profScore));
+
+            if (profScore == 4 || profScore == 3) {
+                this.grade.setBackground(getResources().getDrawable(R.drawable.progress_counter_green));
+            } else if (profScore == 2) {
+                this.grade.setBackground(getResources().getDrawable(R.drawable.progress_counter_yellow));
+            } else if (profScore == 1) {
+                this.grade.setBackground(getResources().getDrawable(R.drawable.progress_counter_red));
+            }
+
+            gradeName.setText("Average Proficiency Score");
         } else {
             gone.setVisibility(View.VISIBLE);
             gradeToolbar.setVisibility(View.INVISIBLE);

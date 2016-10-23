@@ -17,7 +17,7 @@ import net.codealizer.thegradebook.apis.ic.tasks.SectionTask;
 import net.codealizer.thegradebook.apis.ic.schedule.Term;
 import net.codealizer.thegradebook.apis.ic.classbook.Course;
 import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnTermSelectedListener;
 import net.codealizer.thegradebook.ui.classbook.CourseDetailsActivity;
 import net.codealizer.thegradebook.ui.classbook.GradesActivity;
@@ -54,7 +54,7 @@ public class CourseDetailSemesterFragment extends Fragment implements Expandable
 
         mCourse = (Course) getArguments().getSerializable(CourseDetailsActivity.KEY_COURSE);
         mPosition = getArguments().getInt(CourseDetailsActivity.KEY_COURSE_POSITION, 0);
-        mClassbook = Data.mCoreManager.getGradebook(mCourse);
+        mClassbook = SessionManager.mCoreManager.getGradebook(mCourse);
         mSemester = getArguments().getInt(CourseDetailsActivity.KEY_COURSE_SEMESTER, 0);
 
         mAdapter = new CourseDetailsExpandableAdapter(getActivity(), generate(), this);

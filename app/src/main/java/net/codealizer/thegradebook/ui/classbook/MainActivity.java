@@ -1,8 +1,13 @@
 package net.codealizer.thegradebook.ui.classbook;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +20,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import net.codealizer.thegradebook.R;
+import net.codealizer.thegradebook.assets.UpdateResultReciever;
+import net.codealizer.thegradebook.ui.settings.SettingsActivity;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnGradebookRetrievedListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
 import net.codealizer.thegradebook.ui.adapters.DividerItemDecoration;
@@ -55,13 +63,16 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         Toolbar toolbar = (Toolbar) findViewById(R.id.gradebook_toolbar);
         setSupportActionBar(toolbar);
 
-        if (!Data.reloadedOnce) {
-            if (Data.hasGradebookDataStored(this)) {
-                oldTasks = Data.mCoreManager.getAllActivities();
+        if (!SessionManager.reloadedOnce) {
+            if (SessionManager.hasGradebookDataStored(this)) {
+                oldTasks = SessionManager.mCoreManager.getAllActivities();
             } else {
                 oldTasks = null;
             }
             refreshData();
+        }
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_message", true)) {
+            scheduleAlarm();
         }
 
     }
@@ -83,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
     @Override
     public void onGradebookRetrieved(ClassbookManager gradebookManager) {
-        Data.saveGradebook(this, gradebookManager);
-        Data.reloadedOnce = true;
+        SessionManager.saveGradebook(this, gradebookManager);
+        SessionManager.reloadedOnce = true;
 
         mRefreshLayout.setRefreshing(false);
 
@@ -100,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
     @Override
     public void onItemClick(View view, int position) {
-        if (Data.mCoreManager.getStudentClasses().get(position - 1).isActive()) {
+        if (SessionManager.mCoreManager.getStudentClasses().get(position - 1).isActive()) {
             Intent intent = new Intent(this, CourseDetailsActivity.class);
-            intent.putExtra(CourseDetailsActivity.KEY_COURSE, Data.mCoreManager.getStudentClasses().get(position - 1));
+            intent.putExtra(CourseDetailsActivity.KEY_COURSE, SessionManager.mCoreManager.getStudentClasses().get(position - 1));
             intent.putExtra(CourseDetailsActivity.KEY_COURSE_POSITION, position);
             startActivity(intent);
         } else {
@@ -124,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
             case R.id.gradebookThemeItem:
                 //selectTheme();
                 break;
+            case R.id.gradebookSettingsItem:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -133,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         actionBar = getSupportActionBar();
         mRecyclerView = (RecyclerView) findViewById(R.id.gradebook_cards);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+
+        mRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.blue_primary_dark, R.color.turquoise_primary_dark);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -148,10 +165,11 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
             }
         });
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
+
     }
 
     private void refreshData() {
-        RequestTask task = new RequestTask(this, Data.mCoreManager, RequestTask.OPTION_RETRIEVE_GRADES_INFO, this, "Please Wait", "Downloading gradebook...");
+        RequestTask task = new RequestTask(this, SessionManager.mCoreManager, RequestTask.OPTION_RETRIEVE_GRADES_INFO, this, "Please Wait", "Downloading gradebook...");
         task.execute();
     }
 
@@ -166,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
     }
 
     private void refreshInterface() {
-        if (Data.hasGradebookDataStored(this)) {
-            mAdapter = new GradebookRecyclerViewAdapter(this, Data.mCoreManager.getStudentClasses());
+        if (SessionManager.hasGradebookDataStored(this)) {
+            mAdapter = new GradebookRecyclerViewAdapter(this, SessionManager.mCoreManager.getStudentClasses());
             mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
             List<SimpleSectionedRecyclerViewAdapter.Section> sections =
@@ -175,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
             //Sections
             sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Courses"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(Data.mCoreManager.gradebookManager.getClasses(), "Clubs/Extra Courses"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(SessionManager.mCoreManager.gradebookManager.getClasses(), "Clubs/Extra Courses"));
 
             SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
             SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
@@ -190,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
     private void checkForUpdates() {
         if (oldTasks != null) {
             Collection<Pair<String, ClassbookActivity>> old = oldTasks;
-            Collection<Pair<String, ClassbookActivity>> newTasks = Data.mCoreManager.getAllActivities();
+            Collection<Pair<String, ClassbookActivity>> newTasks = SessionManager.mCoreManager.getAllActivities();
 
             newTasks.removeAll(old);
 
@@ -199,6 +217,22 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
             if (newUpdates.size() > 0)
                 Alert.showUpdates(this, newUpdates);
 
+        }
+    }
+
+    public void scheduleAlarm() {
+
+        Intent intent = new Intent(getApplicationContext(), UpdateResultReciever.class);
+
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, UpdateResultReciever.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long firstMillis = System.currentTimeMillis();
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        int time = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("sync_frequency", "30"));
+
+        if (time != -1) {
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, time * (60_000), pendingIntent);
         }
     }
 

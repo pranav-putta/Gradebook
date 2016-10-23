@@ -7,13 +7,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.classbook.Course;
 import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.ui.adapters.CourseDetailsPagerAdapter;
+import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 public class CourseDetailsActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -50,16 +52,25 @@ public class CourseDetailsActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.action_calculate_ebr:
+                Alert.showEBRGradeDialog(mClassbook.getTerms(), this);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_course_details, menu);
+        return true;
+
+    }
+
     private void initialize() {
-        //Retrieve Data
+        //Retrieve SessionManager
         mCourse = (Course) getIntent().getSerializableExtra(KEY_COURSE);
         mPosition = getIntent().getIntExtra(KEY_COURSE_POSITION, 0);
-        mClassbook = Data.mCoreManager.getGradebook(mCourse);
+        mClassbook = SessionManager.mCoreManager.getGradebook(mCourse);
         actionBar = getSupportActionBar();
 
         actionBar.setDisplayShowHomeEnabled(true);

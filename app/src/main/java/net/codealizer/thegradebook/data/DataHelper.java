@@ -7,7 +7,6 @@ import net.codealizer.thegradebook.listeners.OnFindSuggestionsListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public class DataHelper {
 
     public static void findSuggestions(Context ctx, String query, String state, int limit, final long simulatedDelay, final OnFindSuggestionsListener listener) throws IOException {
 
-        final ArrayList<StateSuggestion> suggestions = Data.mCoreManager.searchDistricts(query, state);
+        final ArrayList<StateSuggestion> suggestions = SessionManager.mCoreManager.searchDistricts(query, state);
 
         new Filter() {
             @Override

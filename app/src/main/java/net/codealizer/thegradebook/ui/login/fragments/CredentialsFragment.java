@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.ui.classbook.MainActivity;
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.RequestTask;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
 import net.codealizer.thegradebook.apis.ic.student.Student;
-import net.codealizer.thegradebook.data.Data;
 import net.codealizer.thegradebook.listeners.OnStudentInformationRetrievedListener;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
@@ -55,7 +55,7 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
     private void initialize() {
         LoginActivity.mActionBar.setDisplayHomeAsUpEnabled(true);
         LoginActivity.mActionBar.setDisplayShowHomeEnabled(true);
-        LoginActivity.mActionBar.setTitle("Sign in to " + Data.mCoreManager.getDistrictInfo().getDistrictName());
+        LoginActivity.mActionBar.setTitle("Sign in to " + SessionManager.mCoreManager.getDistrictInfo().getDistrictName());
 
         signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         username = (TextInputLayout) getView().findViewById(R.id.username);
@@ -75,7 +75,7 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
             this.username.setErrorEnabled(false);
             this.password.setErrorEnabled(false);
 
-            RequestTask task = new RequestTask(getActivity(), RequestTask.OPTION_SET_CREDENTIALS, Data.mCoreManager,
+            RequestTask task = new RequestTask(getActivity(), RequestTask.OPTION_SET_CREDENTIALS, SessionManager.mCoreManager,
                     this, username, password);
             task.execute();
 
@@ -94,7 +94,7 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
     @Override
     public void onAuthenticated() {
         RequestTask task = new RequestTask(getActivity(), RequestTask.OPTION_RETRIEVE_STUDENT_INFO,
-                Data.mCoreManager, this);
+                SessionManager.mCoreManager, this);
         task.execute();
     }
 
@@ -115,10 +115,10 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
         String mUsername = this.username.getEditText().getText().toString();
         String mPassword = this.password.getEditText().getText().toString();
         boolean isRememberMeChecked = this.rememberMe.isChecked();
-        DistrictInfo districtInfo = Data.mCoreManager.getDistrictInfo();
+        DistrictInfo districtInfo = SessionManager.mCoreManager.getDistrictInfo();
 
         if (isRememberMeChecked) {
-            Data.setCredentials(mUsername, mPassword, districtInfo, student, getActivity());
+            SessionManager.setCredentials(mUsername, mPassword, districtInfo, student, getActivity());
         }
         Toast.makeText(getActivity(), "Successful Login", Toast.LENGTH_LONG).show();
 

@@ -124,7 +124,7 @@ public class ClassbookActivity implements Serializable {
     public boolean equals(Object obj) {
         if (obj instanceof ClassbookActivity) {
             ClassbookActivity a = (ClassbookActivity) obj;
-            return a.name.equals(name);
+            return a.activityID.equals(activityID);
         } else if (obj instanceof BasicClassbookActivity) {
             BasicClassbookActivity a = (BasicClassbookActivity) obj;
             return a.getTitle().equals(name);
@@ -149,7 +149,7 @@ public class ClassbookActivity implements Serializable {
             letter = "";
         }
 
-        if (!percent.equals(score)) {
+        if (score != null && !percent.equals(score)) {
             if (letter != null && letter.contains("A")) {
                 return Html.fromHtml("You have earned an <strong>" + letter + " (" + percent + "%)</strong> for \"" + name + "\" in <strong>" + WordUtils.capitalize(className.toLowerCase()) + "</strong>");
             } else {

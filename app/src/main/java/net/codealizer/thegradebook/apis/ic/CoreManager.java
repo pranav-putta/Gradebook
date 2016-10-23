@@ -18,7 +18,7 @@ import net.codealizer.thegradebook.apis.ic.classbook.Course;
 import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
 import net.codealizer.thegradebook.apis.ic.student.Student;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.data.StateSuggestion;
 
 import org.json.JSONException;
@@ -197,8 +197,8 @@ public class CoreManager {
     }
 
     public ClassbookManager reloadAll(Context c) throws IOException, JSONException {
-        String username = Data.getUsername(c);
-        String password = Data.getPassword(c);
+        String username = SessionManager.getUsername(c);
+        String password = SessionManager.getPassword(c);
 
         attemptLogin(username, password, districtInfo);
         retrieveStudentInformation();

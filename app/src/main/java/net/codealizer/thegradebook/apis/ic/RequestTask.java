@@ -3,13 +3,12 @@ package net.codealizer.thegradebook.apis.ic;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
 import net.codealizer.thegradebook.apis.ic.student.Student;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.data.ServiceManager;
 import net.codealizer.thegradebook.data.StateSuggestion;
 import net.codealizer.thegradebook.listeners.OnFindSuggestionsListener;
@@ -54,7 +53,7 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
 
     public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, String... param) {
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle("Loading Data");
+        progressDialog.setTitle("Loading SessionManager");
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
 
@@ -67,7 +66,7 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
 
     public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, boolean useProgressDialog, String... param) {
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle("Loading Data");
+        progressDialog.setTitle("Loading SessionManager");
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
 
@@ -136,7 +135,7 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
             }
 
         } else if (!networkError && gradebookerror) {
-            RequestTask task = new RequestTask(mContext, Data.mCoreManager, RequestTask.OPTION_RELOAD_ALL, listener, "Please Wait", "Downloading gradebook...");
+            RequestTask task = new RequestTask(mContext, SessionManager.mCoreManager, RequestTask.OPTION_RELOAD_ALL, listener, "Please Wait", "Downloading gradebook...");
             task.execute();
         } else {
             listener.onNetworkError();
@@ -182,17 +181,22 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
                 case OPTION_RETRIEVE_GRADES_INFO:
                     try {
                         gradebook = mCoreManager.reloadData(mContext);
-                    } catch (IOException | JSONException e) {
+                    } catch (JSONException e) {
                         gradebookerror = true;
-                        e.printStackTrace();
+                    } catch (IOException e) {
+                        success = false;
+                        networkError = true;
                     }
                     break;
                 case OPTION_RELOAD_ALL:
                     try {
                         gradebook = mCoreManager.reloadAll(mContext);
-                    } catch (IOException | JSONException e) {
+                    } catch (JSONException e) {
                         gradebookerror = true;
-                        e.printStackTrace();
+                    } catch (IOException e) {
+                        success = false;
+                        networkError = true;
+
                     }
                     break;
                 case OPTION_SEARCH_DISTRICT:
@@ -200,7 +204,6 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
                         suggestions = mCoreManager.searchDistricts(param[0], param[1]);
                     } catch (IOException ex) {
                         searchError = true;
-                        ex.printStackTrace();
                     }
             }
         } else {

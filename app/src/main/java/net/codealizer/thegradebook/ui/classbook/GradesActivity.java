@@ -147,7 +147,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
             Grade grade = GradesManager.calculateEBR(term.getAllTasks());
 
-            this.grade.setText(grade.toString());
+            this.grade.setText(Grade.valueOf(grade));
 
             if (grade == Grade.A || grade == Grade.AB) {
                 this.grade.setBackground(getResources().getDrawable(R.drawable.progress_counter_green));
@@ -158,7 +158,6 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
             }
 
             mAdapter = new GradesEbrRecyclerViewAdapter(this, term.getAllTasks(), this);
-            gradeToolbar.setVisibility(View.INVISIBLE);
 
             mRecyclerView.setAdapter(mAdapter);
         }

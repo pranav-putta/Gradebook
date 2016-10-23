@@ -10,6 +10,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 
 import net.codealizer.thegradebook.apis.ic.RequestTask;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.assets.Grade;
+import net.codealizer.thegradebook.data.GradesManager;
 import net.codealizer.thegradebook.data.StateSuggestion;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;
 import net.codealizer.thegradebook.ui.classbook.fragments.UpdateDialogFragment;
@@ -30,7 +34,7 @@ import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.schedule.Term;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
-import net.codealizer.thegradebook.data.Data;
+import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnAssignmentAddedListener;
 import net.codealizer.thegradebook.listeners.OnAssignmentEdittedListener;
 import net.codealizer.thegradebook.assets.BasicClassbookActivity;
@@ -49,6 +53,27 @@ import java.util.List;
  */
 
 public class Alert {
+
+    public static void showEBRGradeDialog(ArrayList<Term> terms, Context context) {
+
+        String grade;
+        Spanned message;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("EBR Grade");
+        builder.setPositiveButton("OK", null);
+
+        try {
+            grade = Grade.valueOf(GradesManager.calculateEBR(terms.get(0).getAllTasks()));
+            message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");
+
+        } catch (Exception ex) {
+            message = Html.fromHtml("Could not calculate the EBR Grade for this class");
+        }
+
+        builder.setMessage(message);
+        builder.create().show();
+    }
 
     public static void showNetworkErrorDialog(final Context ctx) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
@@ -98,7 +123,7 @@ public class Alert {
 
 
                 RequestTask background = new RequestTask(c, RequestTask.OPTION_SET_DISTRICT,
-                        Data.mCoreManager, new onAuthenticationListener() {
+                        SessionManager.mCoreManager, new onAuthenticationListener() {
                     @Override
                     public void onAuthenticated() {
                         Intent intent = new Intent(c, LoginActivity.class);
@@ -150,7 +175,7 @@ public class Alert {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Data.logout(activity);
+                SessionManager.logout(activity);
             }
         });
         builder.setNegativeButton("No", null);
@@ -413,61 +438,6 @@ public class Alert {
     }
 
     public static void showUpdates(final AppCompatActivity context, final ArrayList<Pair<String, ClassbookActivity>> activities) {
-        /** AlertDialog.Builder builder = new AlertDialog.Builder(context);
-         builder.setTitle("Updates");
-
-         View v = LayoutInflater.from(context).inflate(R.layout.dialog_updates, null);
-         builder.setView(v);
-
-         final ViewPager pager = (ViewPager) v.findViewById(R.id.updates_pager);
-         pager.setAdapter(new UpdatesPagerAdapter(context.getSupportFragmentManager(), activities));
-
-
-         builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialogInterface, int i) {
-
-        }
-        });
-         builder.setNegativeButton("Cancel", null);
-         builder.setNeutralButton("Back", new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialogInterface, int i) {
-
-        }
-        });
-
-         final AlertDialog alert = builder.create();
-         alert.show();
-
-         alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-        if (pager.getCurrentItem() < activities.size()) {
-        pager.setCurrentItem(pager.getCurrentItem() + 1);
-
-        if (pager.getCurrentItem() == activities.size() - 1) {
-        alert.setButton(DialogInterface.BUTTON_POSITIVE, "Done", new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialogInterface, int i) {
-        alert.dismiss();
-        }
-        });
-        }
-
-        if (!alert.getButton(DialogInterface.BUTTON_NEUTRAL).isEnabled()) {
-        alert.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(true);
-        }
-        } else {
-        alert.dismiss();
-        }
-        }
-        });
-         alert.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-        if (pager.getCurrentItem() > 0) {
-        pager.setCurrentItem(pager.getCurrentItem() - 1);
-        } else {
-        alert.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
-        }
-        }
-        });**/
         UpdateDialogFragment dialogFragment = new UpdateDialogFragment();
 
         Bundle args = new Bundle();

@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -69,13 +71,32 @@
         </activity>
         <activity
             android:name=".ui.login.DistrictSearchActivity"
-            android:parentActivityName=".ui.login.LoginActivity"
             android:label="District Search"
+            android:parentActivityName=".ui.login.LoginActivity"
             android:theme="@style/AppTheme.Default">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.login.LoginActivity" />
         </activity>
+
+        <receiver
+            android:name=".assets.UpdateResultReciever"
+            android:process=":remote" />
+
+        <receiver android:name=".assets.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".assets.UpdateService"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.Default" />
     </application>
 
 </manifest>
