@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
 	private SwipeRefreshLayout mRefreshLayout;
 
-	private GestureDetector mGestureDetector;
-
 	private ArrayList<Pair<String, ClassbookActivity>> oldTasks;
 
 

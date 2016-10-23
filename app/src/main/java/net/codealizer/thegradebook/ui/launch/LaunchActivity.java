@@ -1,10 +1,8 @@
-package net.codealizer.thegradebook.ui.splash;
+package net.codealizer.thegradebook.ui.launch;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.ui.classbook.MainActivity;
 import net.codealizer.thegradebook.ui.login.LoginActivity;
@@ -12,24 +10,14 @@ import net.codealizer.thegradebook.ui.login.LoginActivity;
 public class LaunchActivity extends AppCompatActivity
 {
 
-	/**
-	 * Intent to run proceeding the Splash Activity
-	 */
-	Intent intent;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_splash);
 
-		/**
-		 * Check if the student has already been logged in.
-		 *
-		 * If student is logged in, run the MainActivity
-		 *
-		 * If the student is not logged in, run the LoginActivity
-		 */
+		//If the user is logged in, start the MainActivity
+		//Otherwise start the LoginActivity.
+		Intent intent;
 		if (SessionManager.isStudentLoggedIn(this))
 		{
 			intent = new Intent(this, MainActivity.class);
@@ -40,7 +28,6 @@ public class LaunchActivity extends AppCompatActivity
 		}
 		startActivity(intent);
 		finish();
-
 	}
 
 }
