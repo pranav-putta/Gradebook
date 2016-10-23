@@ -149,7 +149,13 @@
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <!-- Main Activity Strings -->
+    <string name="wait_message">Please wait</string>
+    <string name="downloading_message">Downloading grade data...</string>
+
+    <!-- Preference Manager Retrieval Keys -->
+    <string name="pref_key_notifications_new_message">notifications_new_message</string>
+
 
 
     <!-- Example settings for SessionManager & Sync -->

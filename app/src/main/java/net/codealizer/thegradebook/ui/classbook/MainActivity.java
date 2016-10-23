@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 		Toolbar toolbar = (Toolbar) findViewById(R.id.gradebook_toolbar);
 		setSupportActionBar(toolbar);
 
+		//Get already saved data
 		if (!SessionManager.reloadedOnce)
 		{
 			if (SessionManager.hasGradebookDataStored(this))
@@ -72,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 			}
 			refreshData();
 		}
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_new_message", true))
+		//Schedule notifications if the user wants them
+		if (PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean(getString(R.string.pref_key_notifications_new_message), false)) //Never assume the user wants alarms
 		{
 			scheduleAlarm();
 		}
@@ -85,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 		super.onStart();
 		initialize();
 		refreshInterface();
-
 	}
 
 	@Override
@@ -106,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
 		refreshInterface();
 		checkForUpdates();
-
 	}
 
 	@Override
@@ -151,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 				startActivity(intent);
 				break;
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -184,7 +184,8 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
 	private void refreshData()
 	{
-		RequestTask task = new RequestTask(this, SessionManager.mCoreManager, RequestTask.OPTION_RETRIEVE_GRADES_INFO, this, "Please Wait", "Downloading gradebook...");
+		RequestTask task = new RequestTask(this, SessionManager.mCoreManager, RequestTask.OPTION_RETRIEVE_GRADES_INFO, this,
+				getString(R.string.wait_message), getString(R.string.downloading_message));
 		task.execute();
 	}
 
