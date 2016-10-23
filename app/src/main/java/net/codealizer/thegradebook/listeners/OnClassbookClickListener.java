@@ -6,7 +6,8 @@ import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
  * Created by Pranav on 10/10/16.
  */
 
-public interface OnClassbookClickListener {
+public interface OnClassbookClickListener
+{
 
-    void onClassbookClicked(ClassbookTask task);
+	void onClassbookClicked(ClassbookTask task);
 }

@@ -15,31 +15,35 @@ import java.util.ArrayList;
  * Created by Pranav on 10/16/16.
  */
 
-public class UpdatesPagerAdapter extends FragmentStatePagerAdapter {
+public class UpdatesPagerAdapter extends FragmentStatePagerAdapter
+{
 
-    ArrayList<Pair<String, ClassbookActivity>> activities;
+	ArrayList<Pair<String, ClassbookActivity>> activities;
 
-    public UpdatesPagerAdapter(FragmentManager fm, ArrayList<Pair<String, ClassbookActivity>> activities) {
-        super(fm);
+	public UpdatesPagerAdapter(FragmentManager fm, ArrayList<Pair<String, ClassbookActivity>> activities)
+	{
+		super(fm);
 
-        this.activities = activities;
-    }
+		this.activities = activities;
+	}
 
-    @Override
-    public Fragment getItem(int position) {
-        SimpleFragment fragment = new SimpleFragment();
+	@Override
+	public Fragment getItem(int position)
+	{
+		SimpleFragment fragment = new SimpleFragment();
 
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(SimpleFragment.KEY_TASK, activities.get(position).second);
-        arguments.putString(SimpleFragment.KEY_TASK_CLASS, activities.get(position).first);
+		Bundle arguments = new Bundle();
+		arguments.putSerializable(SimpleFragment.KEY_TASK, activities.get(position).second);
+		arguments.putString(SimpleFragment.KEY_TASK_CLASS, activities.get(position).first);
 
-        fragment.setArguments(arguments);
+		fragment.setArguments(arguments);
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    @Override
-    public int getCount() {
-        return activities.size();
-    }
+	@Override
+	public int getCount()
+	{
+		return activities.size();
+	}
 }

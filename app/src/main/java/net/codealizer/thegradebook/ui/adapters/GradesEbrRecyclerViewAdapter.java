@@ -19,60 +19,69 @@ import java.util.ArrayList;
  * Created by Pranav on 10/10/16.
  */
 
-public class GradesEbrRecyclerViewAdapter extends RecyclerView.Adapter<GradesEbrRecyclerViewAdapter.ViewHolder> {
+public class GradesEbrRecyclerViewAdapter extends RecyclerView.Adapter<GradesEbrRecyclerViewAdapter.ViewHolder>
+{
 
-    Context mContext;
-    private ArrayList<ClassbookTask> task;
-    private boolean isEBR;
+	Context mContext;
+	private ArrayList<ClassbookTask> task;
+	private boolean isEBR;
 
-    private OnClassbookClickListener mOnClickListener;
+	private OnClassbookClickListener mOnClickListener;
 
-    public GradesEbrRecyclerViewAdapter(Context mContext, ArrayList<ClassbookTask> task, OnClassbookClickListener clickListener) {
-        this.mContext = mContext;
-        this.task = task;
-        this.mOnClickListener = clickListener;
-    }
+	public GradesEbrRecyclerViewAdapter(Context mContext, ArrayList<ClassbookTask> task, OnClassbookClickListener clickListener)
+	{
+		this.mContext = mContext;
+		this.task = task;
+		this.mOnClickListener = clickListener;
+	}
 
-    @Override
-    public GradesEbrRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@Override
+	public GradesEbrRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
 
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_simple, parent, false);
+		View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_simple, parent, false);
 
-        return new GradesEbrRecyclerViewAdapter.ViewHolder(item);
-    }
+		return new GradesEbrRecyclerViewAdapter.ViewHolder(item);
+	}
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final ClassbookTask group = task.get(position);
-        final Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+	@Override
+	public void onBindViewHolder(ViewHolder holder, int position)
+	{
+		final ClassbookTask group = task.get(position);
+		final Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
 
-        holder.title.setText(group.name);
+		holder.title.setText(group.name);
 
-        holder.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnClickListener.onClassbookClicked(group);
-                v.vibrate(100);
-            }
-        });
-    }
+		holder.card.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				mOnClickListener.onClassbookClicked(group);
+				v.vibrate(100);
+			}
+		});
+	}
 
-    @Override
-    public int getItemCount() {
-        return task.size();
-    }
+	@Override
+	public int getItemCount()
+	{
+		return task.size();
+	}
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder
+	{
 
-        RelativeLayout card;
-        TextView title;
+		RelativeLayout card;
+		TextView title;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+		public ViewHolder(View itemView)
+		{
+			super(itemView);
 
-            title = (TextView) itemView.findViewById(R.id.card_simple_title);
+			title = (TextView) itemView.findViewById(R.id.card_simple_title);
 
-            card = (RelativeLayout) itemView.findViewById(R.id.card_simple);
-        }
-    }
+			card = (RelativeLayout) itemView.findViewById(R.id.card_simple);
+		}
+	}
 }

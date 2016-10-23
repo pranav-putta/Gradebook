@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Default">
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".ui.splash.LaunchActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

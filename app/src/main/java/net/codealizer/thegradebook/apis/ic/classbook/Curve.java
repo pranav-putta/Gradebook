@@ -6,6 +6,6 @@ public class Curve
 {
 	public Curve(JsonObject curve)
 	{
-		
+
 	}
 }
