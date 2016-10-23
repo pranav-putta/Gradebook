@@ -1,8 +1,8 @@
 package net.codealizer.thegradebook.ui.login;
 
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,131 +21,151 @@ import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 import java.util.List;
 
-public class DistrictSearchActivity extends AppCompatActivity implements FloatingSearchView.OnQueryChangeListener, OnFindSuggestionsListener, FloatingSearchView.OnSearchListener, FloatingSearchView.OnFocusChangeListener, AdapterView.OnItemClickListener {
+public class DistrictSearchActivity extends AppCompatActivity implements FloatingSearchView.OnQueryChangeListener, OnFindSuggestionsListener, FloatingSearchView.OnSearchListener, FloatingSearchView.OnFocusChangeListener, AdapterView.OnItemClickListener
+{
 
-    FloatingSearchView mSearchView;
-    String mState;
-    ListView list;
-    TextView searchResultTitle;
-    TextView noSearchResults;
+	public static final String KEY_STATE = "net.codealizer.ui.login.DistrictSearchActivity.KEY_STATE";
+	FloatingSearchView mSearchView;
+	String mState;
+	ListView list;
+	TextView searchResultTitle;
+	TextView noSearchResults;
+	ArrayAdapter<StateSuggestion> adapter;
 
-    ArrayAdapter<StateSuggestion> adapter;
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_district_search);
+	}
 
-    public static final String KEY_STATE = "net.codealizer.ui.login.DistrictSearchActivity.KEY_STATE";
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_district_search);
-    }
+		initialize();
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+	private void initialize()
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		{
+			getSupportActionBar().setElevation(0);
+		}
 
-        initialize();
-    }
+		mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
+		list = (ListView) findViewById(R.id.district_search_list);
+		searchResultTitle = (TextView) findViewById(R.id.searchResultsCaption);
 
-    private void initialize() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setElevation(0);
-        }
+		mSearchView.setDimBackground(false);
+		mSearchView.setOnQueryChangeListener(this);
+		mSearchView.setOnSearchListener(this);
+		mSearchView.setOnFocusChangeListener(this);
 
-        mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
-        list = (ListView) findViewById(R.id.district_search_list);
-        searchResultTitle = (TextView) findViewById(R.id.searchResultsCaption);
+		mState = getIntent().getStringExtra(KEY_STATE);
 
-        mSearchView.setDimBackground(false);
-        mSearchView.setOnQueryChangeListener(this);
-        mSearchView.setOnSearchListener(this);
-        mSearchView.setOnFocusChangeListener(this);
+		searchResultTitle.setVisibility(View.INVISIBLE);
+		noSearchResults = (TextView) findViewById(R.id.noSearchResults);
+		noSearchResults.setVisibility(View.INVISIBLE);
 
-        mState = getIntent().getStringExtra(KEY_STATE);
+		list.setOnItemClickListener(this);
+	}
 
-        searchResultTitle.setVisibility(View.INVISIBLE);
-        noSearchResults = (TextView) findViewById(R.id.noSearchResults);
-        noSearchResults.setVisibility(View.INVISIBLE);
+	@Override
+	public void onSearchTextChanged(String oldQuery, String newQuery)
+	{
+		if (!oldQuery.equals("") && (newQuery.equals("") || newQuery.length() < 4))
+		{
+			mSearchView.clearSuggestions();
+		} else if (newQuery.length() > 3)
+		{
+			mSearchView.showProgress();
 
-        list.setOnItemClickListener(this);
-    }
+			RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, this, false, newQuery, mState);
+			task.execute();
 
-    @Override
-    public void onSearchTextChanged(String oldQuery, String newQuery) {
-        if (!oldQuery.equals("") && (newQuery.equals("") || newQuery.length() < 4)) {
-            mSearchView.clearSuggestions();
-        } else if (newQuery.length() > 3) {
-            mSearchView.showProgress();
+		}
+	}
 
-            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, this, false, newQuery, mState);
-            task.execute();
+	@Override
+	public void onFindSuggestion(List<StateSuggestion> suggestions)
+	{
+		mSearchView.swapSuggestions(suggestions);
+		mSearchView.hideProgress();
+	}
 
-        }
-    }
+	@Override
+	public void onNetworkError()
+	{
+		Alert.showNetworkErrorDialog(this);
+	}
 
-    @Override
-    public void onFindSuggestion(List<StateSuggestion> suggestions) {
-        mSearchView.swapSuggestions(suggestions);
-        mSearchView.hideProgress();
-    }
+	@Override
+	public void onSuggestionClicked(SearchSuggestion searchSuggestion)
+	{
+		Alert.showDistrictClickedDialog(this, (StateSuggestion) searchSuggestion);
+	}
 
-    @Override
-    public void onNetworkError() {
-        Alert.showNetworkErrorDialog(this);
-    }
+	@Override
+	public void onSearchAction(String currentQuery)
+	{
+		noSearchResults.setVisibility(View.INVISIBLE);
+		if (currentQuery.length() > 3)
+		{
+			RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, new OnFindSuggestionsListener()
+			{
+				@Override
+				public void onFindSuggestion(List<StateSuggestion> suggestions)
+				{
+					adapter = new ArrayAdapter<>(DistrictSearchActivity.this, android.R.layout.simple_list_item_1, (suggestions));
+					list.setAdapter(adapter);
 
-    @Override
-    public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-        Alert.showDistrictClickedDialog(this, (StateSuggestion) searchSuggestion);
-    }
+					if (suggestions.isEmpty())
+					{
+						noSearchResults.setVisibility(View.VISIBLE);
+					}
+				}
 
-    @Override
-    public void onSearchAction(String currentQuery) {
-        noSearchResults.setVisibility(View.INVISIBLE);
-        if (currentQuery.length() > 3) {
-            RequestTask task = new RequestTask(this, RequestTask.OPTION_SEARCH_DISTRICT, SessionManager.mCoreManager, new OnFindSuggestionsListener() {
-                @Override
-                public void onFindSuggestion(List<StateSuggestion> suggestions) {
-                    adapter = new ArrayAdapter<>(DistrictSearchActivity.this, android.R.layout.simple_list_item_1, (suggestions));
-                    list.setAdapter(adapter);
+				@Override
+				public void onNetworkError()
+				{
+					Alert.showNetworkErrorDialog(DistrictSearchActivity.this);
+				}
+			}, false, currentQuery, mState);
 
-                    if (suggestions.isEmpty()) {
-                        noSearchResults.setVisibility(View.VISIBLE);
-                    }
-                }
+			searchResultTitle.setVisibility(View.VISIBLE);
+			task.execute();
+		} else
+		{
+			Alert.showMessageDialog(this, "Error", "Try entering at least 4 letters of your school name");
+		}
+	}
 
-                @Override
-                public void onNetworkError() {
-                    Alert.showNetworkErrorDialog(DistrictSearchActivity.this);
-                }
-            }, false, currentQuery, mState);
+	@Override
+	public void onFocus()
+	{
+		searchResultTitle.setVisibility(View.INVISIBLE);
+		noSearchResults.setVisibility(View.INVISIBLE);
 
-            searchResultTitle.setVisibility(View.VISIBLE);
-            task.execute();
-        } else {
-            Alert.showMessageDialog(this, "Error", "Try entering at least 4 letters of your school name");
-        }
-    }
+		adapter = null;
+		list.setAdapter(adapter);
+	}
 
-    @Override
-    public void onFocus() {
-        searchResultTitle.setVisibility(View.INVISIBLE);
-        noSearchResults.setVisibility(View.INVISIBLE);
+	@Override
+	public void onFocusCleared()
+	{
 
-        adapter = null;
-        list.setAdapter(adapter);
-    }
+	}
 
-    @Override
-    public void onFocusCleared() {
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (adapter != null) {
-            Alert.showDistrictClickedDialog(this, adapter.getItem(i));
-        }
-    }
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+	{
+		if (adapter != null)
+		{
+			Alert.showDistrictClickedDialog(this, adapter.getItem(i));
+		}
+	}
 
 
 }

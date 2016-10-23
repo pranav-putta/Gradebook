@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Pranav on 10/16/16.
  */
 
-public interface OnFindSuggestionsListener extends OnICActionListener {
-    void onFindSuggestion(List<StateSuggestion> suggestions);
+public interface OnFindSuggestionsListener extends OnICActionListener
+{
+	void onFindSuggestion(List<StateSuggestion> suggestions);
 }

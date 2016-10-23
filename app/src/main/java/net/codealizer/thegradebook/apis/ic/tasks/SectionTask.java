@@ -12,32 +12,33 @@ import java.util.HashMap;
  * Created by Pranav on 10/10/16.
  */
 
-public class SectionTask implements Serializable {
+public class SectionTask implements Serializable
+{
 
-    private int termMask;
-    private int activeMask;
-    private String name;
-    private int standardID;
-    private int taskID;
-    private int seq;
-    private boolean stateStandard;
+	private int termMask;
+	private int activeMask;
+	private String name;
+	private int standardID;
+	private int taskID;
+	private int seq;
+	private boolean stateStandard;
 
-    // Score
-    private long scoreID;
-    private String date;
-    private String schedule;
-    private int termID;
-    private String score;
-    private int termSeq;
-    private String periodName;
-    private int periodSeq;
-    private String termName;
-    private double percent;
-    private String comments;
+	// Score
+	private long scoreID;
+	private String date;
+	private String schedule;
+	private int termID;
+	private String score;
+	private int termSeq;
+	private String periodName;
+	private int periodSeq;
+	private String termName;
+	private double percent;
+	private String comments;
 
-    private TaskType type;
+	private TaskType type;
 
-    private HashMap<Integer, Integer> weekKeys;
+	private HashMap<Integer, Integer> weekKeys;
 
     /*
     Variables that do not work for an empty task:
@@ -45,232 +46,286 @@ public class SectionTask implements Serializable {
      */
 
 
-    public SectionTask(JsonObject task) {
-        termMask = task.get("termMask").getAsInt();
-        activeMask = task.get("activeMask").getAsInt();
-        name = task.get("name").getAsString();
-        standardID = task.get("standardID").getAsInt();
-        taskID = task.get("taskID").getAsInt();
-        seq = task.get("seq").getAsInt();
-        stateStandard = task.get("stateStandard").getAsBoolean();
+	public SectionTask(JsonObject task)
+	{
+		termMask = task.get("termMask").getAsInt();
+		activeMask = task.get("activeMask").getAsInt();
+		name = task.get("name").getAsString();
+		standardID = task.get("standardID").getAsInt();
+		taskID = task.get("taskID").getAsInt();
+		seq = task.get("seq").getAsInt();
+		stateStandard = task.get("stateStandard").getAsBoolean();
 
-        //All Items under the score object
-        JsonObject score = task.getAsJsonObject("Score");
-        schedule = score.get("schedule").getAsString();
-        termID = score.get("termID").getAsInt();
-        termSeq = score.get("termSeq").getAsInt();
-        periodName = score.get("periodName").getAsString();
-        termName = score.get("termName").getAsString();
+		//All Items under the score object
+		JsonObject score = task.getAsJsonObject("Score");
+		schedule = score.get("schedule").getAsString();
+		termID = score.get("termID").getAsInt();
+		termSeq = score.get("termSeq").getAsInt();
+		periodName = score.get("periodName").getAsString();
+		termName = score.get("termName").getAsString();
 
-        if (name.contains("Term")) {
-            type = TaskType.TERM;
-        } else if (name.contains("Week")) {
-            type = TaskType.WEEK;
-        } else if (name.contains("Final")) {
-            type = TaskType.FINAL_GRADE;
-        } else if (name.contains("Exam")) {
-            type = TaskType.EXAM;
-        } else {
-            type = TaskType.EMPTY;
-        }
+		if (name.contains("Term"))
+		{
+			type = TaskType.TERM;
+		} else if (name.contains("Week"))
+		{
+			type = TaskType.WEEK;
+		} else if (name.contains("Final"))
+		{
+			type = TaskType.FINAL_GRADE;
+		} else if (name.contains("Exam"))
+		{
+			type = TaskType.EXAM;
+		} else
+		{
+			type = TaskType.EMPTY;
+		}
 
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
-        try {
-            date = (score.get("date").getAsString());
+		try
+		{
+			date = (score.get("date").getAsString());
 
-            this.score = score.get("score").getAsString();
-            if (score.has("percent")) {
-                percent = score.get("percent").getAsDouble();
-            } else {
-                percent = 0;
-            }
-            scoreID = score.get("scoreID").getAsLong();
+			this.score = score.get("score").getAsString();
+			if (score.has("percent"))
+			{
+				percent = score.get("percent").getAsDouble();
+			} else
+			{
+				percent = 0;
+			}
+			scoreID = score.get("scoreID").getAsLong();
 
-            if (score.has("comments")) {
-                comments = score.get("comments").getAsString();
-            } else {
-                comments = "None";
-            }
-        } catch (Exception ex) {
-            date = "-";
-            percent = 0.0;
-            this.score = "-";
-            this.scoreID = 0;
+			if (score.has("comments"))
+			{
+				comments = score.get("comments").getAsString();
+			} else
+			{
+				comments = "None";
+			}
+		} catch (Exception ex)
+		{
+			date = "-";
+			percent = 0.0;
+			this.score = "-";
+			this.scoreID = 0;
 
-        }
+		}
 
 
-    }
+	}
 
-    public int getTermMask() {
-        return termMask;
-    }
+	public static ArrayList<String> getNamesFromList(ArrayList<SectionTask> list)
+	{
+		ArrayList<String> newList = new ArrayList<>();
+		for (SectionTask s : list)
+		{
+			newList.add(s.getName());
+		}
 
-    public void setTermMask(int termMask) {
-        this.termMask = termMask;
-    }
+		return newList;
+	}
 
-    public int getActiveMask() {
-        return activeMask;
-    }
+	public int getTermMask()
+	{
+		return termMask;
+	}
 
-    public void setActiveMask(int activeMask) {
-        this.activeMask = activeMask;
-    }
+	public void setTermMask(int termMask)
+	{
+		this.termMask = termMask;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public int getActiveMask()
+	{
+		return activeMask;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setActiveMask(int activeMask)
+	{
+		this.activeMask = activeMask;
+	}
 
-    public int getStandardID() {
-        return standardID;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public void setStandardID(int standardID) {
-        this.standardID = standardID;
-    }
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-    public int getTaskID() {
-        return taskID;
-    }
+	public int getStandardID()
+	{
+		return standardID;
+	}
 
-    public void setTaskID(int taskID) {
-        this.taskID = taskID;
-    }
+	public void setStandardID(int standardID)
+	{
+		this.standardID = standardID;
+	}
 
-    public int getSeq() {
-        return seq;
-    }
+	public int getTaskID()
+	{
+		return taskID;
+	}
 
-    public void setSeq(int seq) {
-        this.seq = seq;
-    }
+	public void setTaskID(int taskID)
+	{
+		this.taskID = taskID;
+	}
 
-    public boolean isStateStandard() {
-        return stateStandard;
-    }
+	public int getSeq()
+	{
+		return seq;
+	}
 
-    public void setStateStandard(boolean stateStandard) {
-        this.stateStandard = stateStandard;
-    }
+	public void setSeq(int seq)
+	{
+		this.seq = seq;
+	}
 
-    public long getScoreID() {
-        return scoreID;
-    }
+	public boolean isStateStandard()
+	{
+		return stateStandard;
+	}
 
-    public void setScoreID(long scoreID) {
-        this.scoreID = scoreID;
-    }
+	public void setStateStandard(boolean stateStandard)
+	{
+		this.stateStandard = stateStandard;
+	}
 
-    public String getDate() {
-        return date;
-    }
+	public long getScoreID()
+	{
+		return scoreID;
+	}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+	public void setScoreID(long scoreID)
+	{
+		this.scoreID = scoreID;
+	}
 
-    public String getSchedule() {
-        return schedule;
-    }
+	public String getDate()
+	{
+		return date;
+	}
 
-    public void setSchedule(String schedule) {
-        this.schedule = schedule;
-    }
+	public void setDate(String date)
+	{
+		this.date = date;
+	}
 
-    public int getTermID() {
-        return termID;
-    }
+	public String getSchedule()
+	{
+		return schedule;
+	}
 
-    public void setTermID(int termID) {
-        this.termID = termID;
-    }
+	public void setSchedule(String schedule)
+	{
+		this.schedule = schedule;
+	}
 
-    public String getScore() {
-        return score;
-    }
+	public int getTermID()
+	{
+		return termID;
+	}
 
-    public void setScore(String score) {
-        this.score = score;
-    }
+	public void setTermID(int termID)
+	{
+		this.termID = termID;
+	}
 
-    public int getTermSeq() {
-        return termSeq;
-    }
+	public String getScore()
+	{
+		return score;
+	}
 
-    public void setTermSeq(int termSeq) {
-        this.termSeq = termSeq;
-    }
+	public void setScore(String score)
+	{
+		this.score = score;
+	}
 
-    public String getPeriodName() {
-        return periodName;
-    }
+	public int getTermSeq()
+	{
+		return termSeq;
+	}
 
-    public void setPeriodName(String periodName) {
-        this.periodName = periodName;
-    }
+	public void setTermSeq(int termSeq)
+	{
+		this.termSeq = termSeq;
+	}
 
-    public int getPeriodSeq() {
-        return periodSeq;
-    }
+	public String getPeriodName()
+	{
+		return periodName;
+	}
 
-    public void setPeriodSeq(int periodSeq) {
-        this.periodSeq = periodSeq;
-    }
+	public void setPeriodName(String periodName)
+	{
+		this.periodName = periodName;
+	}
 
-    public String getTermName() {
-        return termName;
-    }
+	public int getPeriodSeq()
+	{
+		return periodSeq;
+	}
 
-    public void setTermName(String termName) {
-        this.termName = termName;
-    }
+	public void setPeriodSeq(int periodSeq)
+	{
+		this.periodSeq = periodSeq;
+	}
 
-    public double getPercent() {
-        return percent;
-    }
+	public String getTermName()
+	{
+		return termName;
+	}
 
-    public void setPercent(double percent) {
-        this.percent = percent;
-    }
+	public void setTermName(String termName)
+	{
+		this.termName = termName;
+	}
 
-    public TaskType getType() {
-        return type;
-    }
+	public double getPercent()
+	{
+		return percent;
+	}
 
-    public void setType(TaskType type) {
-        this.type = type;
-    }
+	public void setPercent(double percent)
+	{
+		this.percent = percent;
+	}
 
-    public String getComments() {
-        return comments;
-    }
+	public TaskType getType()
+	{
+		return type;
+	}
 
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
+	public void setType(TaskType type)
+	{
+		this.type = type;
+	}
 
-    public static ArrayList<String> getNamesFromList(ArrayList<SectionTask> list) {
-        ArrayList<String> newList = new ArrayList<>();
-        for (SectionTask s : list) {
-            newList.add(s.getName());
-        }
+	public String getComments()
+	{
+		return comments;
+	}
 
-        return newList;
-    }
+	public void setComments(String comments)
+	{
+		this.comments = comments;
+	}
 
-    public static class Compare implements Comparator<SectionTask> {
-        @Override
-        public int compare(SectionTask o, SectionTask t1) {
-            Integer p1 = o.getSeq();
-            Integer p2 = t1.getSeq();
+	public static class Compare implements Comparator<SectionTask>
+	{
+		@Override
+		public int compare(SectionTask o, SectionTask t1)
+		{
+			Integer p1 = o.getSeq();
+			Integer p2 = t1.getSeq();
 
-            return p1.compareTo(p2);
-        }
-    }
+			return p1.compareTo(p2);
+		}
+	}
 }

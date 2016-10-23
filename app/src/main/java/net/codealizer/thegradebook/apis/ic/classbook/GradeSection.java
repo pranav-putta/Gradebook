@@ -11,8 +11,9 @@ public class GradeSection
 	public String courseName;
 	public String sectionNumber;
 	public String teacherDisplay;
+
 	public GradeSection(JsonObject sectionElement)
 	{
-		
+
 	}
 }

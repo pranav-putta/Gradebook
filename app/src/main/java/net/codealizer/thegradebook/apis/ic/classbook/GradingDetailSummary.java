@@ -7,6 +7,6 @@ public class GradingDetailSummary
 {
 	public GradingDetailSummary(JsonObject grades)
 	{
-		
+
 	}
 }

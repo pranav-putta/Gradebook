@@ -10,64 +10,76 @@ import java.util.List;
  * Created by Pranav on 10/10/16.
  */
 
-public class BasicTerm implements ParentListItem {
+public class BasicTerm implements ParentListItem
+{
 
-    private List mChildrenList;
+	private List mChildrenList;
 
-    private String title;
-    private String dates;
-    private String grade;
+	private String title;
+	private String dates;
+	private String grade;
 
-    private Term mTerm;
+	private Term mTerm;
 
-    public BasicTerm(String title, String dates, String grade, List mChildrenList, Term t) {
-        this.title = title;
-        this.dates = dates;
-        this.grade = grade;
-        this.mChildrenList = mChildrenList;
-        this.mTerm = t;
-    }
+	public BasicTerm(String title, String dates, String grade, List mChildrenList, Term t)
+	{
+		this.title = title;
+		this.dates = dates;
+		this.grade = grade;
+		this.mChildrenList = mChildrenList;
+		this.mTerm = t;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle()
+	{
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
 
-    public String getDates() {
-        return dates;
-    }
+	public String getDates()
+	{
+		return dates;
+	}
 
-    public void setDates(String dates) {
-        this.dates = dates;
-    }
+	public void setDates(String dates)
+	{
+		this.dates = dates;
+	}
 
-    public String getGrade() {
-        return grade;
-    }
+	public String getGrade()
+	{
+		return grade;
+	}
 
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
+	public void setGrade(String grade)
+	{
+		this.grade = grade;
+	}
 
 
-    @Override
-    public List<?> getChildItemList() {
-        return mChildrenList;
-    }
+	@Override
+	public List<?> getChildItemList()
+	{
+		return mChildrenList;
+	}
 
-    public Term getTerm() {
-        return mTerm;
-    }
+	public Term getTerm()
+	{
+		return mTerm;
+	}
 
-    public void setTerm(Term mTerm) {
-        this.mTerm = mTerm;
-    }
+	public void setTerm(Term mTerm)
+	{
+		this.mTerm = mTerm;
+	}
 
-    @Override
-    public boolean isInitiallyExpanded() {
-        return false;
-    }
+	@Override
+	public boolean isInitiallyExpanded()
+	{
+		return false;
+	}
 }
