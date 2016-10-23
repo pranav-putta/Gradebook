@@ -39,8 +39,8 @@ public class Course implements Serializable {
             teacher = "Not available";
         }
 
-        courseName = courseName.toLowerCase();
-        courseName = WordUtils.capitalize(courseName);
+        //courseName = courseName.toLowerCase();
+        //courseName = WordUtils.capitalize(courseName);
 
         String keys[] = {"ac", "hn", "pe"};
 
