@@ -1,4 +1,4 @@
-package net.codealizer.thegradebook.apis.ic.classbook;
+package net.codealizer.thegradebook.apis.ic.xml.classbook;
 
 import com.google.gson.JsonObject;
 

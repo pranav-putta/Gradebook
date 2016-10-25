@@ -1,4 +1,4 @@
-package net.codealizer.thegradebook.apis.ic.tasks;
+package net.codealizer.thegradebook.apis.ic.xml.tasks;
 
 import java.io.Serializable;
 

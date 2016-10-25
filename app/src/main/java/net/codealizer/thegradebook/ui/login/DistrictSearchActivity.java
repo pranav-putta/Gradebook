@@ -13,7 +13,7 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.RequestTask;
+import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.data.StateSuggestion;
 import net.codealizer.thegradebook.listeners.OnFindSuggestionsListener;

@@ -13,4 +13,14 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
+    <TextView
+        android:id="@+id/grades_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Uh oh! There's nothing here"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="invisible" />
+
 </RelativeLayout>

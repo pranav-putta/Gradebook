@@ -1,4 +1,4 @@
-package net.codealizer.thegradebook.apis.ic.district;
+package net.codealizer.thegradebook.apis.ic.xml.district;
 
 import android.os.Parcel;
 import android.os.Parcelable;

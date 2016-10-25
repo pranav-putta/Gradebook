@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.RequestTask;
+import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;

@@ -2,7 +2,9 @@ package net.codealizer.thegradebook.assets;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
-import net.codealizer.thegradebook.apis.ic.schedule.Term;
+
+import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
 
 import java.util.List;
 
@@ -19,15 +21,15 @@ public class BasicTerm implements ParentListItem
 	private String dates;
 	private String grade;
 
-	private Term mTerm;
+	private ClassbookTask mTask;
 
-	public BasicTerm(String title, String dates, String grade, List mChildrenList, Term t)
+	public BasicTerm(String title, String dates, String grade, List mChildrenList, ClassbookTask t)
 	{
 		this.title = title;
 		this.dates = dates;
 		this.grade = grade;
 		this.mChildrenList = mChildrenList;
-		this.mTerm = t;
+		this.mTask = t;
 	}
 
 	public String getTitle()
@@ -67,14 +69,12 @@ public class BasicTerm implements ParentListItem
 		return mChildrenList;
 	}
 
-	public Term getTerm()
-	{
-		return mTerm;
+	public ClassbookTask getTask() {
+		return mTask;
 	}
 
-	public void setTerm(Term mTerm)
-	{
-		this.mTerm = mTerm;
+	public void setmTask(ClassbookTask mTask) {
+		this.mTask = mTask;
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package net.codealizer.thegradebook.listeners;
 
-import net.codealizer.thegradebook.apis.ic.schedule.Term;
+
+import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
 
 /**
  * Created by Pranav on 10/10/16.
@@ -9,6 +11,6 @@ import net.codealizer.thegradebook.apis.ic.schedule.Term;
 public interface OnTermSelectedListener
 {
 
-	void onTermSelected(Term term);
+	void onTermSelected(ClassbookTask task);
 
 }

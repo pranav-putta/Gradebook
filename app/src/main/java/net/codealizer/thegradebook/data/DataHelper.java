@@ -13,34 +13,28 @@ import java.util.List;
  * Created by Pranav on 10/16/16.
  */
 
-public class DataHelper
-{
+public class DataHelper {
 
-	public static void findSuggestions(Context ctx, String query, String state, int limit, final long simulatedDelay, final OnFindSuggestionsListener listener) throws IOException
-	{
+    public static void findSuggestions(Context ctx, String query, String state, int limit, final long simulatedDelay, final OnFindSuggestionsListener listener) throws IOException {
 
-		final ArrayList<StateSuggestion> suggestions = SessionManager.mCoreManager.searchDistricts(query, state);
+        final ArrayList<StateSuggestion> suggestions = SessionManager.mCoreManager.searchDistricts(query, state);
 
-		new Filter()
-		{
-			@Override
-			protected FilterResults performFiltering(CharSequence c)
-			{
-				FilterResults results = new FilterResults();
-				results.values = suggestions;
-				results.count = suggestions.size();
+        new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence c) {
+                FilterResults results = new FilterResults();
+                results.values = suggestions;
+                results.count = suggestions.size();
 
-				return results;
-			}
+                return results;
+            }
 
-			@Override
-			protected void publishResults(CharSequence charSequence, FilterResults filterResults)
-			{
-				if (listener != null)
-				{
-					listener.onFindSuggestion((List<StateSuggestion>) filterResults.values);
-				}
-			}
-		}.filter(query);
-	}
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                if (listener != null) {
+                    listener.onFindSuggestion((List<StateSuggestion>) filterResults.values);
+                }
+            }
+        }.filter(query);
+    }
 }

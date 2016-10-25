@@ -13,9 +13,9 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.RequestTask;
-import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
-import net.codealizer.thegradebook.apis.ic.student.Student;
+import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
+import net.codealizer.thegradebook.apis.ic.xml.district.DistrictInfo;
+import net.codealizer.thegradebook.apis.ic.xml.student.Student;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnStudentInformationRetrievedListener;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;

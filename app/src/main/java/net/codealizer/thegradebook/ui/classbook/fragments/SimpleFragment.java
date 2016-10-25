@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
 
 public class SimpleFragment extends Fragment
 {

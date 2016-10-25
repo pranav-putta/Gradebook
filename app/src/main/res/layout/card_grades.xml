@@ -27,18 +27,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingRight="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="0dp"
-                android:paddingLeft="0dp"
                 android:layout_toLeftOf="@+id/card_grade_score"
                 android:layout_toStartOf="@+id/card_grade_score"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingEnd="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="10dp"
+                android:paddingStart="0dp">
 
                 <TextView
                     android:id="@+id/card_grade_due_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-thin"
                     android:paddingLeft="10dp"
                     android:paddingTop="2dp"
                     android:text="Great work and progress, keep it up"

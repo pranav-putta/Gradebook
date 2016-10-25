@@ -82,11 +82,7 @@
             android:name=".assets.UpdateResultReciever"
             android:process=":remote" />
 
-        <receiver android:name=".assets.BootBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name=".assets.BootBroadcastReceiver" />
 
         <service
             android:name=".assets.UpdateService"

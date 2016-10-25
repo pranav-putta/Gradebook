@@ -17,7 +17,9 @@
             android:clickable="true"
             android:focusable="true"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="0dp">
 
             <TextView
                 android:id="@+id/card_dialog_progress_information_header"
