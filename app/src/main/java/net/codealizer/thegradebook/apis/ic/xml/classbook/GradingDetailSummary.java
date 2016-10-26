@@ -14,6 +14,8 @@ import java.util.Date;
 
 public class GradingDetailSummary implements Serializable {
 
+    static int nextNonClassPeriod = 300;
+
     private ArrayList<Task> tasks;
 
     public GradingDetailSummary(Element grades) {
@@ -32,7 +34,7 @@ public class GradingDetailSummary implements Serializable {
 
     public int getPeriodNumber() {
 
-        int periodNumber = 999;
+        int periodNumber = nextNonClassPeriod++;
 
         if (tasks.size() > 0) {
             try
@@ -41,8 +43,7 @@ public class GradingDetailSummary implements Serializable {
                 Log.i("lol",tasks.get(0).score.periodName.replaceAll("\\D+", ""));
             }
             catch (Exception ex) {
-                //periodNumber will be 999
-                Log.i("lol",tasks.get(0).score.periodName);
+                //periodNumber will be next in sequence
             }
         }
         return periodNumber;
