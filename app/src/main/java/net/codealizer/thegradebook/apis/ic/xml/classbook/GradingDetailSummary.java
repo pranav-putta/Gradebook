@@ -30,7 +30,11 @@ public class GradingDetailSummary implements Serializable {
 
     public int getPeriodNumber() {
         if (tasks.size() > 0) {
-            return Integer.parseInt(tasks.get(0).score.periodName.replaceAll("\\D+", ""));
+            try {
+                Integer.parseInt(tasks.get(0).score.periodName.replaceAll("\\D+", ""));
+            } catch (Exception ex) {
+                return 999;
+            }
         }
 
         return 999;
