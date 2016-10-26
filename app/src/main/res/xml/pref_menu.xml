@@ -34,5 +34,9 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_sync_frequency" />
 
+    <Preference
+        android:key="logout"
+        android:title="@string/menu_gradebook_logout_item_title"/>
+
 
 </PreferenceScreen>

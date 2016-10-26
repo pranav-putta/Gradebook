@@ -1,6 +1,7 @@
 package net.codealizer.thegradebook.ui.settings;
 
 
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -10,10 +11,13 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import net.codealizer.thegradebook.R;
+import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -116,10 +120,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 		super.onCreate(savedInstanceState);
 		setupActionBar();
 
-		addPreferencesFromResource(R.xml.pref_notification);
+		addPreferencesFromResource(R.xml.pref_menu);
 
 		bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
 		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+
+		Preference logout = findPreference("logout");
+		logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				Alert.showLogoutConfirmationDialog(SettingsActivity.this);
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
+				finish();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**

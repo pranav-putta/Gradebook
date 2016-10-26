@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+    <!-- <item
         android:id="@+id/gradebookLogoutItem"
         android:title="@string/menu_gradebook_logout_item_title"
-        app:showAsAction="never" />
+        /> -->
     <item
         android:id="@+id/gradebookRefreshItem"
         android:icon="@drawable/ic_refresh"
