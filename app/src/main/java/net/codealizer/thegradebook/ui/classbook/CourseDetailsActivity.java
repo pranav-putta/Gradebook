@@ -48,6 +48,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             case R.id.action_calculate_ebr:
                 if (mClassbook.isEBR())

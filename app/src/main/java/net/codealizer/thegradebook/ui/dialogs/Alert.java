@@ -155,7 +155,7 @@ public class Alert {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle("Invalid Password");
         builder.setMessage("Your username and password do not seem to be valid, please contact" +
-                "your school's administration.");
+                "your schools administration.");
         builder.setPositiveButton("Ok", null);
         builder.create().show();
     }
