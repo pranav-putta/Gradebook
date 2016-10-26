@@ -54,7 +54,7 @@ import java.util.List;
 
 public class Alert {
 
-    public static void showEBRGradeDialog(ArrayList<Term> terms, Context context) {
+    public static void showEBRGradeDialog(ArrayList<ClassbookTask> terms, Context context) {
 
         String grade;
         Spanned message;
@@ -64,14 +64,14 @@ public class Alert {
         builder.setPositiveButton("OK", null);
 
         try {
-            //grade = Grade.valueOf(GradesManager.calculateEBR(terms.get(0).getAllTasks()));
-            //message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");
+            grade = Grade.valueOf(GradesManager.calculateEBR(terms));
+            message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");
 
         } catch (Exception ex) {
             message = Html.fromHtml("Could not calculate the EBR Grade for this class");
         }
 
-        //builder.setMessage(message);
+        builder.setMessage(message);
         builder.create().show();
     }
 

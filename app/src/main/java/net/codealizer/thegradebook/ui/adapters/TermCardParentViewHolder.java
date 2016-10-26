@@ -77,12 +77,26 @@ public class TermCardParentViewHolder extends ParentViewHolder {
             }
         });
 
+        if (term.getTask().groups.size() > 0) {
+            assignments.setEnabled(true);
+            assignments.setTextColor(Color.parseColor("#0D47A1"));
+        } else {
+            assignments.setTextColor(Color.parseColor("#616161"));
+
+            assignments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    c.onTermUnavailable();
+                }
+            });
+        }
+
         if (enabled) {
             moreInfo.setEnabled(true);
-            moreInfo.setTextColor(Color.parseColor("#616161"));
+            moreInfo.setTextColor(Color.parseColor("#1565C0"));
         } else {
             moreInfo.setEnabled(false);
-            moreInfo.setTextColor(Color.parseColor("#1565C0"));
+            moreInfo.setTextColor(Color.parseColor("#616161"));
         }
     }
 }

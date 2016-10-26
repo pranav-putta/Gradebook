@@ -150,7 +150,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Main Activity Strings -->
-    <string name="wait_message">Please wait</string>
+    <string name="wait_message">Please wait</string>loading
     <string name="downloading_message">Downloading grade data...</string>
 
     <!-- Preference Manager Retrieval Keys -->

@@ -62,7 +62,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
             score = format.format(Float.parseFloat(activity.score));
         } catch (Exception ex) {
             ex.printStackTrace();
-            score = "0";
+            score = activity.score;
         }
         String totalPoints = format.format(activity.getTotalPoints());
         if (isEBR) {

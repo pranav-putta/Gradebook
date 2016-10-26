@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import net.codealizer.thegradebook.listeners.OnTermSelectedListener;
 import net.codealizer.thegradebook.ui.adapters.CourseDetailsExpandableAdapter;
 import net.codealizer.thegradebook.ui.classbook.CourseDetailsActivity;
 import net.codealizer.thegradebook.ui.classbook.GradesActivity;
+import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +56,16 @@ public class CourseDetailSemesterFragment extends Fragment implements Expandable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_course_details_semester, container, false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_calculate_ebr:
+                Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks(mPosition), getActivity());
+        }
+
+        return true;
     }
 
     @Override
@@ -169,5 +181,11 @@ public class CourseDetailSemesterFragment extends Fragment implements Expandable
         intent.putExtra(GradesActivity.KEY_TERM, task);
         intent.putExtra(GradesActivity.KEY_CLASSBOOK, mClassbook);
         getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onTermUnavailable() {
+        Alert.showMessageDialog(getActivity(),
+                "Grades Unavailable", "No grades have been posted here. If this is an EBR class, scroll down to see group scores");
     }
 }

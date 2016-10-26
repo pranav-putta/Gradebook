@@ -50,7 +50,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_calculate_ebr:
-                //Alert.showEBRGradeDialog(mClassbook.getTerms(), this);
+                if (mClassbook.isEBR())
+                    Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks((viewPager.getCurrentItem() + 1)), this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -58,7 +59,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_course_details, menu);
+        if (mClassbook.isEBR())
+            getMenuInflater().inflate(R.menu.menu_course_details, menu);
         return true;
 
     }
