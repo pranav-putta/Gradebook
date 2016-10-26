@@ -12,8 +12,10 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import net.codealizer.thegradebook.R;
+import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -120,6 +122,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 
 		bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
 		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+
 	}
 
 	/**
