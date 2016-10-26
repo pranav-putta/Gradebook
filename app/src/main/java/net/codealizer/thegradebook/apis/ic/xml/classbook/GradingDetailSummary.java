@@ -1,5 +1,7 @@
 package net.codealizer.thegradebook.apis.ic.xml.classbook;
 
+import android.util.Log;
+
 import com.google.gson.JsonObject;
 
 import org.w3c.dom.Element;
@@ -29,15 +31,21 @@ public class GradingDetailSummary implements Serializable {
     }
 
     public int getPeriodNumber() {
+
+        int periodNumber = 999;
+
         if (tasks.size() > 0) {
-            try {
-                Integer.parseInt(tasks.get(0).score.periodName.replaceAll("\\D+", ""));
-            } catch (Exception ex) {
-                return 999;
+            try
+            {
+                periodNumber = Integer.parseInt(tasks.get(0).score.periodName.replaceAll("\\D+", ""));
+                Log.i("lol",tasks.get(0).score.periodName.replaceAll("\\D+", ""));
+            }
+            catch (Exception ex) {
+                //periodNumber will be 999
+                Log.i("lol",tasks.get(0).score.periodName);
             }
         }
-
-        return 999;
+        return periodNumber;
     }
 
     public ArrayList<Task> getTasks() {
