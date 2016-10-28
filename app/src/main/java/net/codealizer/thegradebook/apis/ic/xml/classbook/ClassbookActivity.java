@@ -56,6 +56,8 @@ public class ClassbookActivity implements Serializable {
     public int masterIndex;
     private int groupID;
 
+    public boolean theoreticalGrade = false;
+
     public ClassbookActivity(BasicClassbookActivity a) {
         dueDate = new SimpleDateFormat("MM/dd/yyyy").format(Calendar.getInstance().getTime());
         name = a.getTitle();

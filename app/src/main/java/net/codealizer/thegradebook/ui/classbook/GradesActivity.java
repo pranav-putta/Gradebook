@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,8 @@ import net.codealizer.thegradebook.ui.dialogs.Alert;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.format;
 
 public class GradesActivity extends AppCompatActivity implements OnClassbookClickListener, OnAssignmentAddedListener, OnAssignmentEdittedListener {
 
@@ -82,8 +85,12 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_grades, menu);
+        if(!classbook.isEBR())
+        {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_grades, menu);
+        }
+
 
         return true;
     }
@@ -93,6 +100,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
         switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
+                finish();
                 return true;
             case R.id.action_add_fake_assignment:
                 Alert.showNewAssignmentDialog(task, this, this);
@@ -176,6 +184,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
     @Override
     public void onAssignmentAdded(BasicClassbookActivity activity) {
         ClassbookActivity classbookActivity = new ClassbookActivity(activity);
+        classbookActivity.theoreticalGrade = true;
 
         if (!customAssignments.contains(classbookActivity)) {
             customAssignments.add(classbookActivity);
@@ -211,6 +220,10 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
                 SimpleSectionedRecyclerViewAdapter(this, R.layout.section, R.id.section_text, mAdapter);
         mSectionedAdapter.setSections(sections.toArray(dummy));
         mRecyclerView.setAdapter(mSectionedAdapter);
+
+        DecimalFormat format = new DecimalFormat(".##");
+        String percent = String.valueOf(format.format(calculateGrade())) + "%";
+        grade.setText(percent);
     }
 
     public void refresh() {
@@ -250,6 +263,8 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
         String percent = String.valueOf(format.format(calculateGrade())) + "%";
         grade.setText(percent);
+
+
     }
 
     @Override
@@ -274,24 +289,40 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
         ArrayList<ClassbookGroup> groups = task.groups;
         double finalGrade = 0;
 
+        double weight = 0;
+        double aggPointsRecieved = 0;
+        double aggPointsTotal = 0;
         for (ClassbookGroup g : groups) {
             double groupGrade = 0;
             double totalPoints = 0;
+            weight += g.weight;
             for (ClassbookActivity activity : g.activities) {
-                double score = 0;
-                double total = 0;
-                try {
-                    score = Double.parseDouble(activity.score);
-                    total = (activity.getTotalPoints());
-                } catch (Exception ex) {
+                if(activity.theoreticalGrade)
+                {
+                    try
+                    {
+                        totalPoints += activity.getTotalPoints();
+                        groupGrade += Double.parseDouble(activity.getScore());
+                    }
+                    catch(Exception e) {}
+
                 }
 
-                groupGrade += score;
-                totalPoints += total;
             }
 
+            totalPoints += g.totalPointsPossible;
+            groupGrade += g.pointsEarned;
+            aggPointsTotal += totalPoints;
+            aggPointsRecieved += groupGrade;
             finalGrade += ((groupGrade / totalPoints) * g.weight);
 
+        }
+
+        if(weight - 100 < .001)
+        {
+            if(weight - 100 < 0.001)
+                finalGrade = (aggPointsRecieved / aggPointsTotal)*100;
+            else finalGrade = (finalGrade/weight) *100;
         }
         return finalGrade;
     }

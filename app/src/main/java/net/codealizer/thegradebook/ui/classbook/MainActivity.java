@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.gradebookLogoutItem:
-                Alert.showLogoutConfirmationDialog(this);
-                break;
+            //case R.id.gradebookLogoutItem:
+            //    Alert.showLogoutConfirmationDialog(this);
+            //    break;
             case R.id.gradebookRefreshItem:
                 refreshData();
                 break;

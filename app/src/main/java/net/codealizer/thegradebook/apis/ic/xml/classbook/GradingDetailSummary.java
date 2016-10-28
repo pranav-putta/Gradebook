@@ -40,7 +40,6 @@ public class GradingDetailSummary implements Serializable {
             try
             {
                 periodNumber = Integer.parseInt(tasks.get(0).score.periodName.replaceAll("\\D+", ""));
-                Log.i("lol",tasks.get(0).score.periodName.replaceAll("\\D+", ""));
             }
             catch (Exception ex) {
                 //periodNumber will be next in sequence
