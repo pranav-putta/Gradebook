@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
-				Toast.makeText(this, "lol", Toast.LENGTH_LONG).show();
+				//Toast.makeText(this, "lol", Toast.LENGTH_LONG).show();
 				LoginActivity.mLoginFragmentManager.popBackStackImmediate();
 		}
 

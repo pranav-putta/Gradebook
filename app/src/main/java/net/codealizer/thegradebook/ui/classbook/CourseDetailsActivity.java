@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,15 +45,24 @@ public class CourseDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        NavUtils.navigateUpFromSameTask(this);
+        finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                //NavUtils.navigateUpFromSameTask(this);
+                super.onBackPressed();
                 finish();
-                return true;
+                break;
             case R.id.action_calculate_ebr:
                 if (mClassbook.isEBR())
                     Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks((viewPager.getCurrentItem() + 1)), this);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

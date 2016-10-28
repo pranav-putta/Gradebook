@@ -52,7 +52,7 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
 
     public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, String... param) {
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle("Loading SessionManager");
+        progressDialog.setTitle("Loading...");
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
 
