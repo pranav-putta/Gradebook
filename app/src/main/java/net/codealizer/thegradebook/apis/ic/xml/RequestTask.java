@@ -3,6 +3,7 @@ package net.codealizer.thegradebook.apis.ic.xml;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -52,7 +53,7 @@ public class RequestTask extends AsyncTask<Void, Void, Boolean> {
 
     public RequestTask(Context ctx, int option, CoreManager manager, OnICActionListener listener, String... param) {
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle("Loading SessionManager");
+        progressDialog.setTitle("Loading");
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
 

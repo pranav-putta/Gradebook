@@ -64,8 +64,13 @@ public class Alert {
         builder.setPositiveButton("OK", null);
 
         try {
-            grade = Grade.valueOf(GradesManager.calculateEBR(terms));
-            message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");
+            Grade g = (GradesManager.calculateEBR(terms));
+            if (g != Grade.UNKNOWN) {
+                grade = Grade.valueOf(g);
+                message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");
+            } else {
+                message = Html.fromHtml("Not enough grades to calculate a grade for this class");
+            }
 
         } catch (Exception ex) {
             message = Html.fromHtml("Could not calculate the EBR Grade for this class");

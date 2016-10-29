@@ -36,7 +36,7 @@
 
     <Preference
         android:key="logout"
-        android:title="@string/menu_gradebook_logout_item_title"/>
+        android:title="@string/menu_gradebook_logout_item_title" />
 
 
 </PreferenceScreen>

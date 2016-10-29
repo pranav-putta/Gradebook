@@ -3,6 +3,7 @@ package net.codealizer.thegradebook.ui.adapters;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
             score = activity.score;
         }
         String totalPoints = format.format(activity.getTotalPoints());
-        if (isEBR) {
+        if (score == null) {
+            holder.score.setText("N/A");
+        } else if (isEBR || totalPoints == null || totalPoints.equals("null")) {
             holder.score.setText(score);
         } else {
             holder.score.setText(score + "/" + totalPoints);

@@ -126,11 +126,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
 
 		Preference logout = findPreference("logout");
-		logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-		{
+		logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
-			public boolean onPreferenceClick(Preference preference)
-			{
+			public boolean onPreferenceClick(Preference preference) {
 				Alert.showLogoutConfirmationDialog(SettingsActivity.this);
 				return false;
 			}

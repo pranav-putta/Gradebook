@@ -85,8 +85,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(!classbook.isEBR())
-        {
+        if (!classbook.isEBR()) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_grades, menu);
         }
@@ -297,14 +296,12 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
             double totalPoints = 0;
             weight += g.weight;
             for (ClassbookActivity activity : g.activities) {
-                if(activity.theoreticalGrade)
-                {
-                    try
-                    {
+                if (activity.theoreticalGrade) {
+                    try {
                         totalPoints += activity.getTotalPoints();
                         groupGrade += Double.parseDouble(activity.getScore());
+                    } catch (Exception e) {
                     }
-                    catch(Exception e) {}
 
                 }
 
@@ -318,11 +315,10 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
         }
 
-        if(weight - 100 < .001)
-        {
-            if(weight - 100 < 0.001)
-                finalGrade = (aggPointsRecieved / aggPointsTotal)*100;
-            else finalGrade = (finalGrade/weight) *100;
+        if (weight - 100 < .001) {
+            if (weight - 100 < 0.001)
+                finalGrade = (aggPointsRecieved / aggPointsTotal) * 100;
+            else finalGrade = (finalGrade / weight) * 100;
         }
         return finalGrade;
     }

@@ -17,53 +17,57 @@ import java.util.Comparator;
 public class GradesManager {
 
     public static Grade calculateEBR(ArrayList<ClassbookTask> tasks) {
-        ArrayList<Integer> averageProfScores = new ArrayList<>();
+        if (tasks.size() > 1) {
+            ArrayList<Integer> averageProfScores = new ArrayList<>();
 
-        for (ClassbookTask task : tasks) {
-            averageProfScores.add(calculateProfScore(task));
-        }
-
-        double four = 0;
-        double three = 0;
-        double two = 0;
-        double one = 0;
-
-        double size = averageProfScores.size();
-
-        for (Integer s : averageProfScores) {
-            switch (s) {
-                case 4:
-                    four++;
-                    break;
-                case 3:
-                    three++;
-                    break;
-                case 2:
-                    two++;
-                    break;
-                case 1:
-                    one++;
-                    break;
-                case 0:
-                    size--;
-                    break;
+            for (ClassbookTask task : tasks) {
+                averageProfScores.add(calculateProfScore(task));
             }
-        }
 
-        double score = ((three + four) / size);
+            double four = 0;
+            double three = 0;
+            double two = 0;
+            double one = 0;
 
-        if (one > 0) {
-            return Grade.CD;
-        }
+            double size = averageProfScores.size();
 
-        if (score == 1) {
-            return Grade.A;
-        } else if (score >= 0.66) {
-            return Grade.AB;
-        } else if (score >= 0.33) {
-            return Grade.CD;
+            for (Integer s : averageProfScores) {
+                switch (s) {
+                    case 4:
+                        four++;
+                        break;
+                    case 3:
+                        three++;
+                        break;
+                    case 2:
+                        two++;
+                        break;
+                    case 1:
+                        one++;
+                        break;
+                    case 0:
+                        size--;
+                        break;
+                }
+            }
+
+            double score = ((three + four) / size);
+
+            if (one > 0) {
+                return Grade.CD;
+            }
+
+            if (score == 1) {
+                return Grade.A;
+            } else if (score >= 0.66) {
+                return Grade.AB;
+            } else if (score >= 0.33) {
+                return Grade.CD;
+            } else {
+                return Grade.D;
+            }
         } else {
-            return Grade.D;
+            return Grade.UNKNOWN;
         }
 
     }

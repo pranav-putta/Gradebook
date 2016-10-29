@@ -1,7 +1,9 @@
 package net.codealizer.thegradebook.apis.ic.xml;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -100,12 +102,12 @@ public class CoreManager {
         String json = getContent(new URL(url), false);
         if (!json.isEmpty()) {
             this.districtCode = districtCode;
-            districtInfo = mapper.fromJson(json, DistrictInfo.class);
+            districtInfo = new DistrictInfo(json);
         } else {
             return false;
         }
 
-
+        Log.e("sup", json);
         return true;
     }
 
