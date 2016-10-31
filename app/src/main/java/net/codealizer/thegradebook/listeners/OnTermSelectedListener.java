@@ -1,8 +1,7 @@
 package net.codealizer.thegradebook.listeners;
 
 
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 
 /**
  * Created by Pranav on 10/10/16.

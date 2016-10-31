@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Pair;
 
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.StudentNotification;
 import net.codealizer.thegradebook.ui.classbook.fragments.SimpleFragment;
 
 import java.util.ArrayList;
@@ -15,35 +14,31 @@ import java.util.ArrayList;
  * Created by Pranav on 10/16/16.
  */
 
-public class UpdatesPagerAdapter extends FragmentStatePagerAdapter
-{
+public class UpdatesPagerAdapter extends FragmentStatePagerAdapter {
 
-	ArrayList<Pair<String, ClassbookActivity>> activities;
+    ArrayList<StudentNotification> activities;
 
-	public UpdatesPagerAdapter(FragmentManager fm, ArrayList<Pair<String, ClassbookActivity>> activities)
-	{
-		super(fm);
+    public UpdatesPagerAdapter(FragmentManager fm, ArrayList<StudentNotification> activities) {
+        super(fm);
 
-		this.activities = activities;
-	}
+        this.activities = activities;
+    }
 
-	@Override
-	public Fragment getItem(int position)
-	{
-		SimpleFragment fragment = new SimpleFragment();
+    @Override
+    public Fragment getItem(int position) {
+        SimpleFragment fragment = new SimpleFragment();
 
-		Bundle arguments = new Bundle();
-		arguments.putSerializable(SimpleFragment.KEY_TASK, activities.get(position).second);
-		arguments.putString(SimpleFragment.KEY_TASK_CLASS, activities.get(position).first);
+        Bundle arguments = new Bundle();
+        arguments.putString(SimpleFragment.KEY_TASK_CLASS, activities.get(position).getNotificationText());
+        arguments.putString(SimpleFragment.KEY_DATE, activities.get(position).getDisplayDate());
 
-		fragment.setArguments(arguments);
+        fragment.setArguments(arguments);
 
-		return fragment;
-	}
+        return fragment;
+    }
 
-	@Override
-	public int getCount()
-	{
-		return activities.size();
-	}
+    @Override
+    public int getCount() {
+        return activities.size();
+    }
 }

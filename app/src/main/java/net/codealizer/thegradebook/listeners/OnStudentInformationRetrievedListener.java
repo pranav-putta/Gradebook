@@ -1,7 +1,7 @@
 package net.codealizer.thegradebook.listeners;
 
 
-import net.codealizer.thegradebook.apis.ic.xml.student.Student;
+import net.codealizer.thegradebook.apis.ic.student.Student;
 
 /**
  * Created by Pranav on 10/9/16.

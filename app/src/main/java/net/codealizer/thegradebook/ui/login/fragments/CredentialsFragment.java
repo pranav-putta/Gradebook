@@ -1,5 +1,6 @@
 package net.codealizer.thegradebook.ui.login.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,14 +9,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
-import net.codealizer.thegradebook.apis.ic.xml.district.DistrictInfo;
-import net.codealizer.thegradebook.apis.ic.xml.student.Student;
+import net.codealizer.thegradebook.apis.ic.RequestTask;
+import net.codealizer.thegradebook.apis.ic.district.DistrictInfo;
+import net.codealizer.thegradebook.apis.ic.student.Student;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnStudentInformationRetrievedListener;
 import net.codealizer.thegradebook.listeners.onAuthenticationListener;
@@ -29,7 +30,6 @@ import net.codealizer.thegradebook.ui.login.LoginActivity;
 
 public class CredentialsFragment extends Fragment implements View.OnClickListener, onAuthenticationListener, OnStudentInformationRetrievedListener {
 
-    private Button signIn;
     private TextInputLayout username;
     private TextInputLayout password;
     private CheckBox rememberMe;
@@ -57,7 +57,7 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
         LoginActivity.mActionBar.setDisplayShowHomeEnabled(true);
         LoginActivity.mActionBar.setTitle("Sign in to " + SessionManager.mCoreManager.getDistrictInfo().getDistrictName());
 
-        signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
+        Button signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         username = (TextInputLayout) getView().findViewById(R.id.username);
         password = (TextInputLayout) getView().findViewById(R.id.password);
         rememberMe = (CheckBox) getView().findViewById(R.id.rememberMe);
@@ -67,6 +67,12 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
+
+        InputMethodManager inputManager = (InputMethodManager)
+                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
 
         String username = this.username.getEditText().getText().toString();
         String password = this.password.getEditText().getText().toString();
@@ -120,9 +126,10 @@ public class CredentialsFragment extends Fragment implements View.OnClickListene
         if (isRememberMeChecked) {
             SessionManager.setCredentials(mUsername, mPassword, districtInfo, student, getActivity());
         }
-        Toast.makeText(getActivity(), "Successful Login", Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(getActivity(), MainActivity.class);
         getActivity().startActivity(intent);
+
+        getActivity().finish();
     }
 }

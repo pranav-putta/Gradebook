@@ -14,8 +14,8 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //If the user is logged in, start the MainActivity
-        //Otherwise start the LoginActivity.
+        // If the user is logged in, start the MainActivity
+        // Otherwise start the LoginActivity.
         Intent intent;
         if (SessionManager.isStudentLoggedIn(this) && SessionManager.hasLatestUpdate(this)) {
             intent = new Intent(this, MainActivity.class);

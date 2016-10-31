@@ -1,119 +1,127 @@
 package net.codealizer.thegradebook.assets;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
-import android.util.Pair;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookManager;
+import net.codealizer.thegradebook.apis.ic.Notifications;
+import net.codealizer.thegradebook.apis.ic.StudentNotification;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
 import net.codealizer.thegradebook.data.SessionManager;
-import net.codealizer.thegradebook.listeners.OnGradebookRetrievedListener;
+import net.codealizer.thegradebook.ui.launch.LaunchActivity;
+
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 /**
  * Created by Pranav on 10/22/16.
  */
 
-public class UpdateResultReciever extends BroadcastReceiver implements OnGradebookRetrievedListener {
+public class UpdateResultReciever extends BroadcastReceiver {
 
     public static final int REQUEST_CODE = 285548;
     public static final String ACTION = "net.codealizer.thegradebook.alarm";
 
     private Context context;
-    private ArrayList<Pair<String, ClassbookActivity>> oldTasks;
+    private Notifications oldNotifications;
 
     private SharedPreferences preferences;
     private MediaPlayer mMediaPlayer;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        SessionManager.loadData(context);
-        android.os.Debug.waitForDebugger();  // this line is key
-
         this.context = context;
-        this.oldTasks = SessionManager.mCoreManager.getAllActivities();
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
 
-        try {
-            ClassbookManager classbookManager = SessionManager.mCoreManager.reloadAll(context);
-            onGradebookRetrieved(classbookManager);
-        } catch (Exception e) {
-            onNetworkError();
+        if (SessionManager.hasGradebookDataStored(context)) {
+            SessionManager.loadData(context);
+
+            oldNotifications = SessionManager.mCoreManager.notifications;
+            new DownloadTask().execute();
         }
 
     }
 
-    @Override
-    public void onGradebookRetrieved(ClassbookManager gradebookManager) {
-        android.os.Debug.waitForDebugger();  // this line is key
-
+    public void onNotificationsRetrieved(Notifications notifications) {
         try {
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-            if (oldTasks != null) {
-                Collection<Pair<String, ClassbookActivity>> old = oldTasks;
-                Collection<Pair<String, ClassbookActivity>> newTasks = SessionManager.mCoreManager.getAllActivities();
+            if (oldNotifications != null && notifications != null && notifications.getNotifications().size() > 0) {
+                Collection<StudentNotification> old = oldNotifications.getNotifications();
+                Collection<StudentNotification> newTasks = notifications.getNotifications();
 
                 newTasks.removeAll(old);
 
-                ArrayList<Pair<String, ClassbookActivity>> newUpdates = new ArrayList<>(newTasks);
+                ArrayList<StudentNotification> newUpdates = new ArrayList<>(newTasks);
 
                 if (newUpdates.size() > 0 && preferences.getBoolean("notifications_new_message", true)) {
                     buildNotifications(newUpdates);
                 }
+
+                SessionManager.saveNotifications(context, notifications);
             }
 
 
             Intent i = new Intent(context, UpdateService.class);
             context.startService(i);
         } catch (Exception ex) {
-
         }
     }
 
-    @Override
     public void onNetworkError() {
-
     }
 
-    private void buildNotifications(ArrayList<Pair<String, ClassbookActivity>> updates) {
+    private void buildNotifications(ArrayList<StudentNotification> updates) {
 
-        for (Pair<String, ClassbookActivity> activityPair : updates) {
+        for (StudentNotification activityPair : updates) {
 
-            String className = activityPair.first;
-            ClassbookActivity activity = activityPair.second;
+            String message = activityPair.getNotificationText();
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
             builder.setSmallIcon(R.mipmap.ic_launcher);
-            builder.setContentTitle("New Assignment");
-
-            String message;
-
-            if (activity.getLetterGrade() != null && activity.getLetterGrade().contains("A")) {
-                message = "You received an " + activity.getLetterGrade() + " for " + activity.name + " in " + className;
-            } else if (activity.getLetterGrade() != null) {
-                message = "You received a " + activity.getLetterGrade() + " for " + activity.name + " in " + className;
-            } else {
-                message = "You received a " + activity.getLetterGrade() + " for " + activity.name + " in " + className;
-            }
-
+            builder.setContentTitle("Gradebook");
             builder.setContentText(message);
+            builder.setAutoCancel(true);
+
+            builder.getNotification().flags |= Notification.FLAG_AUTO_CANCEL;
+
+
+            Intent notificationIntent = new Intent(context, LaunchActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                    notificationIntent, 0);
+
+            builder.setContentIntent(pendingIntent);
 
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(1, builder.build());
+
+            int id = 0;
+            try {
+                id = Integer.parseInt(activityPair.getNotificationID());
+            } catch (Exception ignore) {
+
+            }
+
+            manager.notify(id, builder.build());
 
             if (preferences.getBoolean("notifications_new_message_vibrate", true)) {
                 Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -121,25 +129,61 @@ public class UpdateResultReciever extends BroadcastReceiver implements OnGradebo
             }
 
             if (!preferences.getString("notifications_new_message_ringtone", "").equals("")) {
-                playSound(context, Uri.parse(preferences.getString("ringtone", "default ringtone")));
+                Uri notification = Uri.parse(preferences.getString("notifications_new_message_ringtone", "default ringtone"));
+                Ringtone r = RingtoneManager.getRingtone(context, notification);
+                r.play();
             }
         }
 
     }
 
-    private void playSound(Context context, Uri alert) {
-        mMediaPlayer = new MediaPlayer();
-        try {
-            mMediaPlayer.setDataSource(context, alert);
-            final AudioManager audioManager = (AudioManager) context
-                    .getSystemService(Context.AUDIO_SERVICE);
-            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
+    private class DownloadTask extends AsyncTask<Boolean, Boolean, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Boolean... booleen) {
+            UpdateResultReciever.this.context = context;
+            UpdateResultReciever.this.oldNotifications = SessionManager.mCoreManager.getNotifications();
+
+            boolean success = true;
+
+            Notifications notifications = null;
+
+            try {
+                try {
+                    try {
+                        ClassbookManager gradebook = SessionManager.mCoreManager.reloadData(context);
+                        SessionManager.saveGradebook(context, gradebook);
+                    } catch (IOException | ParserConfigurationException | SAXException e) {
+                        try {
+                            ClassbookManager gradebook = SessionManager.mCoreManager.reloadAll(context);
+                            SessionManager.saveGradebook(context, gradebook);
+                        } catch (IOException | ParserConfigurationException | SAXException ex) {
+                            success = false;
+                        }
+                    }
+                    try {
+                        notifications = SessionManager.mCoreManager.retrieveNotifications();
+                        if (notifications.getNotifications().size() > 5) {
+                        }
+                        //SessionManager.saveNotifications(context, notifications);
+                    } catch (SAXException | ParserConfigurationException | IOException e) {
+                        success = false;
+                    }
+
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } catch (Exception e) {
+                onNetworkError();
             }
-        } catch (IOException e) {
-            System.out.println("OOPS");
+
+            if (success && notifications != null) {
+                onNotificationsRetrieved(notifications);
+            }
+
+            return null;
         }
     }
+
 }

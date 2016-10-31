@@ -40,11 +40,14 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
+
             android:theme="@style/AppTheme.Default.NoActionBar" />
         <activity
             android:name=".ui.classbook.CourseDetailsActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_course_details"
             android:parentActivityName=".ui.classbook.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -52,22 +55,16 @@
         </activity>
         <activity
             android:name=".ui.classbook.GradesActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_grades"
             android:parentActivityName=".ui.classbook.CourseDetailsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.classbook.CourseDetailsActivity" />
         </activity>
-        <activity
-            android:name=".ui.classbook.EBRGradesActivity"
-            android:label="@string/title_activity_grades"
-            android:parentActivityName=".ui.classbook.GradesActivity"
-            android:theme="@style/AppTheme.Default.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.classbook.GradesActivity" />
-        </activity>
+
         <activity
             android:name=".ui.login.DistrictSearchActivity"
             android:label="District Search"
@@ -82,7 +79,11 @@
             android:name=".assets.UpdateResultReciever"
             android:process=":remote" />
 
-        <receiver android:name=".assets.BootBroadcastReceiver" />
+        <receiver android:name=".assets.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".assets.UpdateService"

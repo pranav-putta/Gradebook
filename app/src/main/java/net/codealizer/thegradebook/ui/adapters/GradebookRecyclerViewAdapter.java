@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.CourseDetail;
+import net.codealizer.thegradebook.apis.ic.classbook.CourseDetail;
 
 import java.util.ArrayList;
 

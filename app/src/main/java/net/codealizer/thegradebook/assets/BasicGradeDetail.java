@@ -1,5 +1,8 @@
 package net.codealizer.thegradebook.assets;
 
+import net.codealizer.thegradebook.apis.ic.curves.Curve;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
+
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,188 +12,161 @@ import java.util.Map;
  * Created by Pranav on 10/10/16.
  */
 
-public class BasicGradeDetail
-{
+public class BasicGradeDetail {
 
-	public static LinkedHashMap<Double, String> grades;
+    private static LinkedHashMap<Double, String> grades;
 
-	static
-	{
-		grades = new LinkedHashMap<>();
-		grades.put(92.5, "A+");
-		grades.put(89.5, "A");
-		grades.put(86.5, "A-");
-		grades.put(82.5, "B+");
-		grades.put(79.5, "B");
-		grades.put(76.5, "B-");
-		grades.put(72.5, "C+");
-		grades.put(69.5, "C");
-		grades.put(66.5, "C-");
-		grades.put(62.5, "D+");
-		grades.put(59.5, "D");
-		grades.put(56.5, "D");
-		grades.put(52.5, "D-");
-		grades.put(49.5, "F");
-	}
+    private String name;
+    private String dueDate;
+    private String score;
+    private String percent;
+    private String multiplier;
+    private String comments;
+    private boolean isEBR;
+    private String letterGrade;
 
-	private String name;
-	private String dueDate;
-	private String score;
-	private String percent;
-	private String multiplier;
-	private String comments;
-	private boolean isEBR;
-	private String letterGrade;
+    private PortalClassbook classbook;
 
-	public BasicGradeDetail(String name, String dueDate, String score, String percent, String multiplier, String comments, boolean ebr, String letterGrade)
-	{
-		this.name = name;
-		this.dueDate = dueDate;
-		this.score = score;
-		this.percent = percent;
-		this.multiplier = multiplier + "x";
-		this.comments = comments;
-		this.isEBR = ebr;
-		this.letterGrade = letterGrade;
-	}
+    public BasicGradeDetail(String name, String dueDate, String score, String percent, String multiplier, String comments, boolean ebr, String letterGrade) {
+        this.name = name;
+        this.dueDate = dueDate;
+        this.score = score;
+        this.percent = percent;
+        this.multiplier = multiplier + "x";
+        this.comments = comments;
+        this.isEBR = ebr;
+        this.letterGrade = letterGrade;
+    }
 
-	public BasicGradeDetail(String name, String dueDate, String score, String percent, String multiplier, String comments, boolean ebr)
-	{
-		this.name = name;
-		this.dueDate = dueDate;
-		this.score = score;
-		this.percent = percent;
-		this.multiplier = multiplier + "x";
-		this.comments = comments;
-		this.isEBR = ebr;
-		this.letterGrade = calculateGrade();
-	}
+    public BasicGradeDetail(String name, String dueDate, String score, String percent, String multiplier, String comments, boolean ebr, PortalClassbook classbook) {
+        this.classbook = classbook;
+        defineGrades();
 
-	public static String calculateGrade(String percent)
-	{
-		for (Map.Entry<Double, String> entry : grades.entrySet())
-		{
-			double limit = entry.getKey();
-			if (Double.parseDouble(percent) > limit)
-			{
-				return entry.getValue();
-			}
-		}
-		return "";
-	}
+        this.name = name;
+        this.dueDate = dueDate;
+        this.score = score;
+        this.percent = percent;
+        this.multiplier = multiplier + "x";
+        this.comments = comments;
+        this.isEBR = ebr;
+        this.letterGrade = calculateGrade();
 
-	public String calculateGrade()
-	{
-		for (Map.Entry<Double, String> entry : grades.entrySet())
-		{
-			double limit = entry.getKey();
-			if (!percent.equals("∞"))
-			{
-				if (Double.parseDouble(percent) > limit)
-				{
-					return entry.getValue();
-				}
-			}
-		}
-		return "Not Applicable";
-	}
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    private void defineGrades() {
+        grades = new LinkedHashMap<>();
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+        if (classbook != null) {
+            for (Curve c : classbook.getCurves()) {
+                if (c.getName() != null)
+                    for (Curve.CurveItem item : c.getCurves()) {
+                        grades.put(item.getMinPercent(), item.getScore());
+                    }
+            }
+        }
+    }
 
-	public String getDueDate()
-	{
-		return dueDate;
-	}
+    public static String calculateGrade(String percent) {
 
-	public void setDueDate(String dueDate)
-	{
-		this.dueDate = dueDate;
-	}
+        for (Map.Entry<Double, String> entry : grades.entrySet()) {
+            double limit = entry.getKey();
+            if (!percent.equals("∞")) {
+                if (Double.parseDouble(percent) > limit) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return "";
+    }
 
-	public String getScore()
-	{
-		return score;
-	}
+    public String calculateGrade() {
+        for (Map.Entry<Double, String> entry : grades.entrySet()) {
+            double limit = entry.getKey();
+            if (!percent.equals("∞")) {
+                if (Double.parseDouble(percent) > limit) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return "Not Applicable";
+    }
 
-	public void setScore(String score)
-	{
-		this.score = score;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPercent()
-	{
-		return percent;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPercent(String percent)
-	{
-		this.percent = percent;
-	}
+    public String getDueDate() {
+        return dueDate;
+    }
 
-	public String getMultiplier()
-	{
-		return multiplier;
-	}
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
 
-	public void setMultiplier(String multiplier)
-	{
-		this.multiplier = multiplier + "x";
-	}
+    public String getScore() {
+        return score;
+    }
 
-	public String getComments()
-	{
-		return comments;
-	}
+    public void setScore(String score) {
+        this.score = score;
+    }
 
-	public void setComments(String comments)
-	{
-		this.comments = comments;
-	}
+    public String getPercent() {
+        return percent;
+    }
 
-	public boolean isEBR()
-	{
-		return isEBR;
-	}
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 
-	public void setEBR(boolean EBR)
-	{
-		isEBR = EBR;
-	}
+    public String getMultiplier() {
+        return multiplier;
+    }
 
-	public String getLetterGrade()
-	{
-		return letterGrade;
-	}
+    public void setMultiplier(String multiplier) {
+        this.multiplier = multiplier + "x";
+    }
 
-	public void setLetterGrade(String letterGrade)
-	{
-		this.letterGrade = letterGrade;
-	}
+    public String getComments() {
+        return comments;
+    }
 
-	public List<String> getHeaders()
-	{
-		return Arrays.asList("Score", "Letter Grade", "Due Date", "Multiplier", "Comments");
-	}
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
-	public List<String> getValues()
-	{
-		String score = getScore();
-		if (!score.equals("N/A") && !score.equals("IP") && !score.equals("AG"))
-		{
-			if (!isEBR)
-			{
-				score = score + " (" + getPercent() + "%)";
-			}
-		}
+    public boolean isEBR() {
+        return isEBR;
+    }
 
-		return Arrays.asList(score, getLetterGrade(), getDueDate(), getMultiplier(), getComments());
-	}
+    public void setEBR(boolean EBR) {
+        isEBR = EBR;
+    }
+
+    public String getLetterGrade() {
+        return letterGrade;
+    }
+
+    public void setLetterGrade(String letterGrade) {
+        this.letterGrade = letterGrade;
+    }
+
+    public List<String> getHeaders() {
+        return Arrays.asList("Score", "Letter Grade", "Due Date", "Multiplier", "Comments");
+    }
+
+    public List<String> getValues() {
+        String score = getScore();
+        if (!score.equals("N/A") && !score.equals("IP") && !score.equals("AG")) {
+            if (!isEBR) {
+                score = score + " (" + getPercent() + "%)";
+            }
+        }
+
+        return Arrays.asList(score, getLetterGrade(), getDueDate(), getMultiplier(), getComments());
+    }
 }

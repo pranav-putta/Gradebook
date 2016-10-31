@@ -16,13 +16,9 @@ import android.widget.TextView;
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.calendar.ScheduleStructure;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.CourseDetail;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.PortalClassbook;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.TermSchedule;
-import net.codealizer.thegradebook.apis.ic.xml.tasks.SectionTask;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.CourseDetail;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.assets.BasicTerm;
 import net.codealizer.thegradebook.assets.BasicTermDetail;
 import net.codealizer.thegradebook.data.SessionManager;
@@ -33,7 +29,6 @@ import net.codealizer.thegradebook.ui.classbook.GradesActivity;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 

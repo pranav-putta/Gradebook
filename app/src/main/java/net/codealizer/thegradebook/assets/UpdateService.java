@@ -8,33 +8,26 @@ import android.support.v4.content.WakefulBroadcastReceiver;
  * Created by Pranav on 10/22/16.
  */
 
-public class UpdateService extends IntentService
-{
+public class UpdateService extends IntentService {
 
-	public UpdateService()
-	{
-		super("update-service");
-	}
+    public UpdateService() {
+        super("update-service");
+    }
 
-	public UpdateService(String name)
-	{
-		super(name);
-	}
+    public UpdateService(String name) {
+        super(name);
+    }
 
-	@Override
-	public void onCreate()
-	{
-		super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-		android.os.Debug.waitForDebugger();  // this line is key
 
-	}
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent)
-	{
-		android.os.Debug.waitForDebugger();  // this line is key
+    @Override
+    protected void onHandleIntent(Intent intent) {
 
-		WakefulBroadcastReceiver.completeWakefulIntent(intent);
-	}
+        WakefulBroadcastReceiver.completeWakefulIntent(intent);
+    }
 }

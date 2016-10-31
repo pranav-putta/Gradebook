@@ -7,16 +7,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.CourseDetail;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.PortalClassbook;
+import net.codealizer.thegradebook.apis.ic.classbook.CourseDetail;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
+import net.codealizer.thegradebook.apis.ic.schedule.Term;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.ui.adapters.CourseDetailsPagerAdapter;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
+
+import java.util.ArrayList;
 
 public class CourseDetailsActivity extends AppCompatActivity {
     public static final String KEY_COURSE = "net.codealizer.thegradebook.ui.gradebook.CourseDetailsActivity.KEY_COURSE";
@@ -45,8 +47,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         NavUtils.navigateUpFromSameTask(this);
         finish();
     }
@@ -94,7 +95,26 @@ public class CourseDetailsActivity extends AppCompatActivity {
         adapter = new CourseDetailsPagerAdapter(getSupportFragmentManager(), mClassbook.getCalendar().getTermNames().size(), mClassbook, mCourse, mPosition);
         viewPager.setAdapter(adapter);
 
+        ArrayList<Term> terms = mClassbook.getCalendar().getTerms();
+
+        int position = 0;
+
+        for (int i = 0; i < terms.size(); i++) {
+            Term t = terms.get(i);
+
+            long d1 = t.getEndDate().getTime();
+            long d2 = t.getStartDate().getTime();
+
+            long now = System.currentTimeMillis();
+
+            if (now > d2 && now < d1) {
+                position = i;
+                break;
+            }
+        }
+
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(position);
 
 
     }

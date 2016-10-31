@@ -3,7 +3,6 @@ package net.codealizer.thegradebook.ui.adapters;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.assets.BasicGradeDetail;
 import net.codealizer.thegradebook.listeners.OnAssignmentEdittedListener;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
@@ -30,14 +30,18 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
     Context mContext;
     private boolean isEBR;
     private ClassbookTask task;
+    private PortalClassbook classbook;
     private OnAssignmentEdittedListener mListener;
 
-    public GradesRecyclerViewAdapter(Context mContext, ArrayList<ClassbookActivity> activities, boolean ebr, OnAssignmentEdittedListener listener, ClassbookTask task) {
+    public GradesRecyclerViewAdapter(Context mContext, ArrayList<ClassbookActivity> activities,
+                                     boolean ebr, OnAssignmentEdittedListener listener, ClassbookTask task,
+                                     PortalClassbook classbook) {
         this.mContext = mContext;
         this.activities = activities;
         this.isEBR = ebr;
         this.mListener = listener;
         this.task = task;
+        this.classbook = classbook;
     }
 
     @Override
@@ -92,7 +96,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
 
 
                 BasicGradeDetail detail = new BasicGradeDetail(activity.name, activity.getDueDate(), score, format.format((s / activity.getTotalPoints()) * 100),
-                        format.format(activity.weight), activity.getComments(), isEBR);
+                        format.format(activity.weight), activity.getComments(), isEBR, classbook);
                 Alert.showProgressInformation(detail, mContext);
             }
         });
@@ -137,7 +141,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
 
 
                     BasicGradeDetail detail = new BasicGradeDetail(activity.name, activity.getDueDate(), score, format.format((s / activity.getTotalPoints()) * 100),
-                            format.format(activity.weight), activity.getComments(), isEBR);
+                            format.format(activity.weight), activity.getComments(), isEBR, classbook);
                     Alert.showProgressInformation(detail, mContext);
                 }
             });
@@ -162,7 +166,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<GradesRecycl
                     v.vibrate(100);
 
                     BasicGradeDetail detail = new BasicGradeDetail(activity.name, activity.getDueDate(), activity.score,
-                            format.format((mScore / activity.getTotalPoints()) * 100), String.valueOf(activity.weight), activity.getComments(), isEBR);
+                            format.format((mScore / activity.getTotalPoints()) * 100), String.valueOf(activity.weight), activity.getComments(), isEBR, classbook);
                     Alert.showProgressInformation(detail, mContext);
 
                     return true;

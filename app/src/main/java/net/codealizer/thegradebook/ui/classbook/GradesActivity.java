@@ -1,12 +1,10 @@
 package net.codealizer.thegradebook.ui.classbook;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,18 +14,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookGroup;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.PortalClassbook;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.assets.BasicClassbookActivity;
-import net.codealizer.thegradebook.assets.Grade;
 import net.codealizer.thegradebook.data.GradesManager;
 import net.codealizer.thegradebook.listeners.OnAssignmentAddedListener;
 import net.codealizer.thegradebook.listeners.OnAssignmentEdittedListener;
-import net.codealizer.thegradebook.listeners.OnClassbookClickListener;
-import net.codealizer.thegradebook.ui.adapters.GradesEbrRecyclerViewAdapter;
 import net.codealizer.thegradebook.ui.adapters.GradesRecyclerViewAdapter;
 import net.codealizer.thegradebook.ui.adapters.SimpleSectionedRecyclerViewAdapter;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
@@ -36,9 +30,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.format;
-
-public class GradesActivity extends AppCompatActivity implements OnClassbookClickListener, OnAssignmentAddedListener, OnAssignmentEdittedListener {
+public class GradesActivity extends AppCompatActivity implements OnAssignmentAddedListener, OnAssignmentEdittedListener {
 
     public static final String KEY_COURSE = "net.codealizer.thegradebook.ui.gradebook.GradesActivity.KEY_COURSE";
     public static final String KEY_TERM = "net.codealizer.thegradebook.ui.gradebook.GradesActivity.KEY_TERM";
@@ -126,7 +118,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
 
         if (task != null && task.groups.size() > 0) {
-            mAdapter = new GradesRecyclerViewAdapter(this, task.getAllActivities(), isEBR, this, task);
+            mAdapter = new GradesRecyclerViewAdapter(this, task.getAllActivities(), isEBR, this, task, classbook);
             List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
 
             for (Pair<Integer, String> pair : task.getCategories()) {
@@ -173,14 +165,6 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
 
     @Override
-    public void onClassbookClicked(ClassbookTask task) {
-        Intent intent = new Intent(this, EBRGradesActivity.class);
-        intent.putExtra(EBRGradesActivity.KEY_TASK, task);
-        //intent.putExtra(EBRGradesActivity.KEY_TASKS, term.getAllTasks());
-        startActivity(intent);
-    }
-
-    @Override
     public void onAssignmentAdded(BasicClassbookActivity activity) {
         ClassbookActivity classbookActivity = new ClassbookActivity(activity);
         classbookActivity.theoreticalGrade = true;
@@ -198,7 +182,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
             mRecyclerView.scrollToPosition(task.getAllActivities().indexOf(classbookActivity));
             DecimalFormat format = new DecimalFormat(".##");
 
-            String percent = String.valueOf(format.format(calculateGrade())) + "%";
+            String percent = String.valueOf(format.format(GradesManager.calculateGrade(task.groups))) + "%";
             grade.setText(percent);
         } else {
             Alert.showInvalidNameDialog(this);
@@ -206,7 +190,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
     }
 
     public void refresh(ArrayList<ClassbookActivity> activities) {
-        mAdapter = new GradesRecyclerViewAdapter(this, activities, false, this, task);
+        mAdapter = new GradesRecyclerViewAdapter(this, activities, false, this, task, classbook);
         List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
 
         for (Pair<Integer, String> pair : task.getCategories()) {
@@ -221,7 +205,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
         mRecyclerView.setAdapter(mSectionedAdapter);
 
         DecimalFormat format = new DecimalFormat(".##");
-        String percent = String.valueOf(format.format(calculateGrade())) + "%";
+        String percent = String.valueOf(format.format(GradesManager.calculateGrade(task.groups)) + "%");
         grade.setText(percent);
     }
 
@@ -260,7 +244,7 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
 
         DecimalFormat format = new DecimalFormat(".##");
 
-        String percent = String.valueOf(format.format(calculateGrade())) + "%";
+        String percent = String.valueOf(format.format(GradesManager.calculateGrade(task.groups))) + "%";
         grade.setText(percent);
 
 
@@ -284,42 +268,40 @@ public class GradesActivity extends AppCompatActivity implements OnClassbookClic
         refresh();
     }
 
-    private double calculateGrade() {
-        ArrayList<ClassbookGroup> groups = task.groups;
-        double finalGrade = 0;
+    /**private double calculateGrade() {
+     ArrayList<ClassbookGroup> groups = task.groups;
+     double finalGrade = 0;
 
-        double weight = 0;
-        double aggPointsRecieved = 0;
-        double aggPointsTotal = 0;
-        for (ClassbookGroup g : groups) {
-            double groupGrade = 0;
-            double totalPoints = 0;
-            weight += g.weight;
-            for (ClassbookActivity activity : g.activities) {
-                if (activity.theoreticalGrade) {
-                    try {
-                        totalPoints += activity.getTotalPoints();
-                        groupGrade += Double.parseDouble(activity.getScore());
-                    } catch (Exception e) {
-                    }
+     double weight = 0;
+     double aggPointsRecieved = 0;
+     double aggPointsTotal = 0;
+     for (ClassbookGroup g : groups) {
+     double groupGrade = 0;
+     double totalPoints = 0;
+     weight += g.weight;
+     for (ClassbookActivity activity : g.activities) {
+     if (activity.theoreticalGrade) {
+     try {
+     totalPoints += activity.getTotalPoints();
+     groupGrade += Double.parseDouble(activity.getScore());
+     } catch (Exception e) {
+     }
 
-                }
+     }
 
-            }
+     }
 
-            totalPoints += g.totalPointsPossible;
-            groupGrade += g.pointsEarned;
-            aggPointsTotal += totalPoints;
-            aggPointsRecieved += groupGrade;
-            finalGrade += ((groupGrade / totalPoints) * g.weight);
+     aggPointsTotal += totalPoints;
+     aggPointsRecieved += groupGrade;
+     finalGrade += ((groupGrade / totalPoints) * g.weight);
 
-        }
+     }
 
-        if (weight - 100 < .001) {
-            if (weight - 100 < 0.001)
-                finalGrade = (aggPointsRecieved / aggPointsTotal) * 100;
-            else finalGrade = (finalGrade / weight) * 100;
-        }
-        return finalGrade;
-    }
+     if (weight - 100 < .001) {
+     if (weight - 100 < 0.001)
+     finalGrade = (aggPointsRecieved / aggPointsTotal) * 100;
+     else finalGrade = (finalGrade / weight) * 100;
+     }
+     return finalGrade;
+     }**/
 }

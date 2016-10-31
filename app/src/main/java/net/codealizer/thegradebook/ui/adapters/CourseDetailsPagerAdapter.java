@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import net.codealizer.thegradebook.apis.ic.xml.classbook.CourseDetail;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.PortalClassbook;
+import net.codealizer.thegradebook.apis.ic.classbook.CourseDetail;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.ui.classbook.CourseDetailsActivity;
 import net.codealizer.thegradebook.ui.classbook.fragments.CourseDetailSemesterFragment;
 

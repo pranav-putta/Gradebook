@@ -7,12 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,11 +22,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookGroup;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
+import net.codealizer.thegradebook.apis.ic.RequestTask;
+import net.codealizer.thegradebook.apis.ic.StudentNotification;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 import net.codealizer.thegradebook.assets.BasicClassbookActivity;
 import net.codealizer.thegradebook.assets.BasicGradeDetail;
 import net.codealizer.thegradebook.assets.BasicTermDetail;
@@ -82,7 +80,7 @@ public class Alert {
 
     public static void showNetworkErrorDialog(final Context ctx) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        builder.setTitle("Network Error");
+        builder.setTitle("Couldn't access Internet");
         builder.setMessage("Make sure that you are connected to the Internet");
         builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             @Override
@@ -334,6 +332,8 @@ public class Alert {
     }
 
     public static void showNewAssignmentDialog(ClassbookTask t, Context ctx, final OnAssignmentAddedListener listener) {
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle("New Assignment");
 
@@ -438,7 +438,7 @@ public class Alert {
 
     }
 
-    public static void showUpdates(final AppCompatActivity context, final ArrayList<Pair<String, ClassbookActivity>> activities) {
+    public static void showUpdates(final FragmentActivity context, final ArrayList<StudentNotification> activities) {
         UpdateDialogFragment dialogFragment = new UpdateDialogFragment();
 
         Bundle args = new Bundle();

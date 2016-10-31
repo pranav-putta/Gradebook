@@ -10,16 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
 
 public class SimpleFragment extends Fragment
 {
 	public static final String ID_BUNDLE = "bundle";
-	public static final String KEY_TASK = "net.codealizer.thegradebook.ui.gradebook.cards.KEY_TASK";
+	public static final String KEY_DATE = "net.codealizer.thegradebook.ui.gradebook.cards.KEY_DATE";
 	public static final String KEY_TASK_CLASS = "net.codealizer.thegradebook.ui.gradebook.cards.KEY_TASK_CLASS";
 	int id;
-	String className;
-	ClassbookActivity activity;
+	String text;
+	String date;
 
 	@SuppressLint("ValidFragment")
 	public SimpleFragment()
@@ -33,6 +32,7 @@ public class SimpleFragment extends Fragment
 
 	}
 
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -43,10 +43,8 @@ public class SimpleFragment extends Fragment
 
 		TextView img = (TextView) v.findViewById(R.id.dialog_updates_message);
 
-		activity = (ClassbookActivity) getArguments().getSerializable(KEY_TASK);
-		className = getArguments().getString(KEY_TASK_CLASS);
-
-		img.setText(activity.getInfoString(className));
+		text = getArguments().getString(KEY_TASK_CLASS);
+		img.setText(text);
 
 		return v;
 	}

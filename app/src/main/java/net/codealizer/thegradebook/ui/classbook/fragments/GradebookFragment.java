@@ -8,30 +8,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.Notifications;
-import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
-import net.codealizer.thegradebook.apis.ic.xml.StudentNotification;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookManager;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
 import net.codealizer.thegradebook.data.SessionManager;
-import net.codealizer.thegradebook.listeners.OnGradebookRetrievedListener;
-import net.codealizer.thegradebook.listeners.OnNotificationRetrievedListener;
 import net.codealizer.thegradebook.listeners.RecyclerItemClickListener;
 import net.codealizer.thegradebook.ui.adapters.DividerItemDecoration;
 import net.codealizer.thegradebook.ui.adapters.GradebookRecyclerViewAdapter;
 import net.codealizer.thegradebook.ui.adapters.SimpleSectionedRecyclerViewAdapter;
 import net.codealizer.thegradebook.ui.classbook.CourseDetailsActivity;
-import net.codealizer.thegradebook.ui.dialogs.Alert;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -56,7 +45,6 @@ public class GradebookFragment extends Fragment implements RecyclerItemClickList
     @Override
     public void onStart() {
         super.onStart();
-
 
 
         initialize();
@@ -98,7 +86,6 @@ public class GradebookFragment extends Fragment implements RecyclerItemClickList
      **/
 
 
-
     private void initialize() {
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.gradebook_cards);
 
@@ -133,19 +120,5 @@ public class GradebookFragment extends Fragment implements RecyclerItemClickList
         }
     }
 
-    private void checkForUpdates() {
-        if (oldTasks != null) {
-            Collection<Pair<String, ClassbookActivity>> old = oldTasks;
-            Collection<Pair<String, ClassbookActivity>> newTasks = SessionManager.mCoreManager.getAllActivities();
-
-            newTasks.removeAll(old);
-
-            ArrayList<Pair<String, ClassbookActivity>> newUpdates = new ArrayList<>(newTasks);
-
-            if (newUpdates.size() > 0)
-                Alert.showUpdates(getActivity(), newUpdates);
-
-        }
-    }
 
 }

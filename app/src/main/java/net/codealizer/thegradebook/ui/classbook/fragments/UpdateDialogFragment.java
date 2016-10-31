@@ -4,14 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.StudentNotification;
 import net.codealizer.thegradebook.ui.adapters.UpdatesPagerAdapter;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class UpdateDialogFragment extends DialogFragment {
         cancel = (Button) view.findViewById(R.id.updates_cancel);
 
 
-        final ArrayList<Pair<String, ClassbookActivity>> activities = (ArrayList<Pair<String, ClassbookActivity>>) getArguments().getSerializable(KEY_ACTIVITIES);
+        final ArrayList<StudentNotification> activities = (ArrayList<StudentNotification>) getArguments().getSerializable(KEY_ACTIVITIES);
 
         pagerAdapter = new UpdatesPagerAdapter(getChildFragmentManager(), activities);
         viewPager.setAdapter(pagerAdapter);
@@ -60,8 +59,10 @@ public class UpdateDialogFragment extends DialogFragment {
                 if (viewPager.getCurrentItem() < activities.size()) {
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                     back.setEnabled(true);
+                    back.setTextColor(getActivity().getResources().getColor(R.color.colorAccent));
                     if (viewPager.getCurrentItem() == activities.size() - 1) {
                         next.setEnabled(false);
+                        next.setTextColor(getActivity().getResources().getColor(R.color.md_grey_600));
                     }
                 }
             }
@@ -72,8 +73,10 @@ public class UpdateDialogFragment extends DialogFragment {
                 if (viewPager.getCurrentItem() > 0) {
                     viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
                     next.setEnabled(true);
+                    next.setTextColor(getActivity().getResources().getColor(R.color.colorAccent));
                     if (viewPager.getCurrentItem() == 0) {
                         back.setEnabled(false);
+                        back.setTextColor(getActivity().getResources().getColor(R.color.md_grey_600));
                     }
                 }
             }

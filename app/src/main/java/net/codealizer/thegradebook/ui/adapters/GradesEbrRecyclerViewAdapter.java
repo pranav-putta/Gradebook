@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 import net.codealizer.thegradebook.listeners.OnClassbookClickListener;
 
 import java.util.ArrayList;

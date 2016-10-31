@@ -61,11 +61,7 @@ public class CourseDetailsExpandableAdapter extends ExpandableRecyclerAdapter<Te
     @Override
     public void onBindParentViewHolder(TermCardParentViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
         BasicTerm term = (BasicTerm) parentListItem;
-        if (parentListItems.get(position).getChildItemList().size() > 0) {
-            parentViewHolder.bind(term);
-        } else {
-            parentViewHolder.bind(term, false);
-        }
+        parentViewHolder.bind(term);
     }
 
     @Override

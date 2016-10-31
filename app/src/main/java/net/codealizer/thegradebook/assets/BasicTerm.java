@@ -3,8 +3,7 @@ package net.codealizer.thegradebook.assets;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
 
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
-import net.codealizer.thegradebook.apis.ic.xml.schedule.Term;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 
 import java.util.List;
 

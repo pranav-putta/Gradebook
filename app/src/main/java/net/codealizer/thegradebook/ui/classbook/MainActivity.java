@@ -2,53 +2,61 @@ package net.codealizer.thegradebook.ui.classbook;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import net.codealizer.thegradebook.R;
-import net.codealizer.thegradebook.apis.ic.xml.RequestTask;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookManager;
+import net.codealizer.thegradebook.apis.ic.Notifications;
+import net.codealizer.thegradebook.apis.ic.StudentNotification;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookManager;
 import net.codealizer.thegradebook.assets.UpdateResultReciever;
 import net.codealizer.thegradebook.data.SessionManager;
 import net.codealizer.thegradebook.listeners.OnGradebookRetrievedListener;
-import net.codealizer.thegradebook.listeners.RecyclerItemClickListener;
-import net.codealizer.thegradebook.ui.adapters.DividerItemDecoration;
-import net.codealizer.thegradebook.ui.adapters.GradebookRecyclerViewAdapter;
-import net.codealizer.thegradebook.ui.adapters.SimpleSectionedRecyclerViewAdapter;
+import net.codealizer.thegradebook.listeners.OnNotificationRetrievedListener;
+import net.codealizer.thegradebook.ui.classbook.fragments.GradebookFragment;
+import net.codealizer.thegradebook.ui.classbook.fragments.RecentActivityFragment;
 import net.codealizer.thegradebook.ui.dialogs.Alert;
 import net.codealizer.thegradebook.ui.settings.SettingsActivity;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnGradebookRetrievedListener, RecyclerItemClickListener.OnItemClickListener {
+import javax.xml.parsers.ParserConfigurationException;
+
+public class MainActivity extends AppCompatActivity implements OnGradebookRetrievedListener, OnNotificationRetrievedListener {
 
     ActionBar actionBar;
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private ViewPager viewPager;
 
     private SwipeRefreshLayout mRefreshLayout;
 
-    private ArrayList<Pair<String, ClassbookActivity>> oldTasks;
+    private ArrayList<StudentNotification> oldNotifications;
+
+    private int mPosition;
+
+    public static boolean active = false;
 
 
     @Override
@@ -58,29 +66,49 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         Toolbar toolbar = (Toolbar) findViewById(R.id.gradebook_toolbar);
         setSupportActionBar(toolbar);
 
-        //Get already saved data
-        if (!SessionManager.reloadedOnce) {
-            if (SessionManager.hasGradebookDataStored(this)) {
-                oldTasks = SessionManager.mCoreManager.getAllActivities();
-            } else {
-                oldTasks = null;
-            }
-            refreshData();
-        }
+        initialize();
+
+
         //Schedule notifications if the user wants them
+        //Never assume the user wants alarms
         if (PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.pref_key_notifications_new_message), false)) //Never assume the user wants alarms
-        {
-            //scheduleAlarm();
+                .getBoolean(getString(R.string.pref_key_notifications_new_message), true)) {
+            scheduleAlarm();
         }
+
+        active = true;
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 
     @Override
     protected void onResume() {
         super.onStart();
-        initialize();
-        refreshInterface();
+
+        if (SessionManager.shouldReload()) {
+            new RefreshTask().execute();
+        } else {
+            refresh();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        active = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        active = false;
     }
 
     @Override
@@ -90,45 +118,13 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         return true;
     }
 
-    @Override
-    public void onGradebookRetrieved(ClassbookManager gradebookManager) {
-        SessionManager.saveGradebook(this, gradebookManager);
-        SessionManager.reloadedOnce = true;
-
-        mRefreshLayout.setRefreshing(false);
-
-        refreshInterface();
-        checkForUpdates();
-    }
-
-    @Override
-    public void onNetworkError() {
-        Alert.showNetworkErrorDialog(this);
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        if (position != 0 && (position - 1) != SessionManager.mCoreManager.gradebookManager.getClasses() && (position - 1) != SessionManager.mCoreManager.getStudentClasses().size()) {
-            if (SessionManager.mCoreManager.getStudentClasses().get(position - 1).isActive()) {
-                Intent intent = new Intent(this, CourseDetailsActivity.class);
-                intent.putExtra(CourseDetailsActivity.KEY_COURSE, SessionManager.mCoreManager.getStudentClasses().get(position - 1));
-                intent.putExtra(CourseDetailsActivity.KEY_COURSE_POSITION, position);
-                startActivity(intent);
-            } else {
-                Alert.showEmptyClassDialog(this);
-            }
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            //case R.id.gradebookLogoutItem:
-            //    Alert.showLogoutConfirmationDialog(this);
-            //    break;
             case R.id.gradebookRefreshItem:
-                refreshData();
+                new RefreshTask().execute();
                 break;
             case R.id.gradebookThemeItem:
                 //selectTheme();
@@ -143,33 +139,20 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
 
     private void initialize() {
         actionBar = getSupportActionBar();
-        mRecyclerView = (RecyclerView) findViewById(R.id.gradebook_cards);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.blue_primary_dark, R.color.turquoise_primary_dark);
 
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
         actionBar.setTitle(getString(R.string.title_activity_main));
+
 
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData();
+                new RefreshTask().execute();
             }
         });
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
-
     }
 
-    private void refreshData() {
-        RequestTask task = new RequestTask(this, SessionManager.mCoreManager, RequestTask.OPTION_RETRIEVE_GRADES_INFO, this,
-                getString(R.string.wait_message), getString(R.string.downloading_message));
-        task.execute();
-    }
 
     private void selectTheme() {
         Resources res = getResources();
@@ -181,36 +164,83 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         Alert.showThemeSelectionDialog(this, Arrays.asList(colors), Arrays.asList(colorNames));
     }
 
-    private void refreshInterface() {
-        if (SessionManager.hasGradebookDataStored(this)) {
-            mAdapter = new GradebookRecyclerViewAdapter(this, SessionManager.mCoreManager.getStudentClasses());
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-            List<SimpleSectionedRecyclerViewAdapter.Section> sections =
-                    new ArrayList<>();
+    public void scheduleAlarm() {
 
-            //Sections
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Courses"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(SessionManager.mCoreManager.gradebookManager.getClasses(), "Clubs/Extra Courses"));
+        Intent intent = new Intent(getApplicationContext(), UpdateResultReciever.class);
 
-            SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
-            SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
-                    SimpleSectionedRecyclerViewAdapter(this, R.layout.section, R.id.section_text, mAdapter);
-            mSectionedAdapter.setSections(sections.toArray(dummy));
+        SessionManager.pendingIntent = PendingIntent.getBroadcast(this, UpdateResultReciever.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            mRecyclerView.setAdapter(mSectionedAdapter);
+        long firstMillis = System.currentTimeMillis();
+        SessionManager.alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        int time = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("sync_frequency", "30"));
+
+        if (time != -1) {
+            SessionManager.alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, time * (60_000),
+                    SessionManager.pendingIntent);
 
         }
     }
 
-    private void checkForUpdates() {
-        if (oldTasks != null) {
-            Collection<Pair<String, ClassbookActivity>> old = oldTasks;
-            Collection<Pair<String, ClassbookActivity>> newTasks = SessionManager.mCoreManager.getAllActivities();
+    @Override
+    public void onGradebookRetrieved(ClassbookManager gradebookManager) {
+        SessionManager.saveGradebook(this, gradebookManager);
+    }
 
+    @Override
+    public void onNotificationRetrieved(Notifications notifications) {
+        SessionManager.saveNotifications(this, notifications);
+    }
+
+    @Override
+    public void onNetworkError() {
+        Alert.showNetworkErrorDialog(this);
+        if (SessionManager.hasGradebookDataStored(this)) {
+            refresh();
+        }
+    }
+
+    public void refresh() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.gradebook_tabs);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                MainActivity.this.mPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(mPosition);
+    }
+
+
+    public void onCompleteRefresh() {
+        refresh();
+        checkForUpdates();
+    }
+
+    private void checkForUpdates() {
+        if (oldNotifications != null) {
+            Collection<StudentNotification> old = oldNotifications;
+            Collection<StudentNotification> newTasks = SessionManager.mCoreManager.getNotifications().getNotifications();
             newTasks.removeAll(old);
 
-            ArrayList<Pair<String, ClassbookActivity>> newUpdates = new ArrayList<>(newTasks);
+            ArrayList<StudentNotification> newUpdates = new ArrayList<>(newTasks);
 
             if (newUpdates.size() > 0)
                 Alert.showUpdates(this, newUpdates);
@@ -218,21 +248,112 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
         }
     }
 
-    public void scheduleAlarm() {
+    public class RefreshTask extends AsyncTask<Boolean, Boolean, Boolean> {
 
-        Intent intent = new Intent(getApplicationContext(), UpdateResultReciever.class);
+        private ProgressDialog p;
 
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, UpdateResultReciever.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        @Override
+        protected void onPreExecute() {
+            p = new ProgressDialog(MainActivity.this);
+            p.setMessage("Downloading gradebook data ...");
+            p.setTitle("Please Wait");
+            p.setCancelable(false);
+            p.show();
 
-        long firstMillis = System.currentTimeMillis();
-        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            if (SessionManager.hasGradebookDataStored(MainActivity.this))
+                oldNotifications = new ArrayList<>(SessionManager.mCoreManager.notifications.getNotifications());
 
-        int time = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("sync_frequency", "30"));
+        }
 
-        if (time != -1) {
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, time * (60_000), pendingIntent);
+        @Override
+        protected Boolean doInBackground(Boolean... strings) {
+
+            boolean success = true;
+            try {
+                try {
+                    ClassbookManager gradebook = SessionManager.mCoreManager.reloadData(MainActivity.this);
+                    MainActivity.this.onGradebookRetrieved(gradebook);
+                } catch (IOException | ParserConfigurationException | SAXException e) {
+                    try {
+                        ClassbookManager gradebook = SessionManager.mCoreManager.reloadAll(MainActivity.this);
+                        MainActivity.this.onGradebookRetrieved(gradebook);
+                    } catch (IOException | ParserConfigurationException | SAXException ex) {
+                        success = false;
+                    }
+                }
+                try {
+                    Notifications notifications = SessionManager.mCoreManager.retrieveNotifications();
+                    if (notifications != null)
+                        MainActivity.this.onNotificationRetrieved(notifications);
+                } catch (SAXException | ParserConfigurationException | IOException e) {
+                    success = false;
+                }
+
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            return success;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            p.dismiss();
+            mRefreshLayout.setRefreshing(false);
+
+            if (success) {
+                MainActivity.this.onCompleteRefresh();
+            } else {
+                MainActivity.this.onNetworkError();
+            }
         }
     }
 
+    public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        GradebookFragment fragment;
+        RecentActivityFragment activityFragment;
+
+
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+            fragment = new GradebookFragment();
+            activityFragment = new RecentActivityFragment();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return fragment;
+                case 1:
+                    return activityFragment;
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.main_activity_classes_tab_name);
+                case 1:
+                    return getString(R.string.main_activity_recent_activity_tab_name);
+            }
+
+            return "";
+        }
+    }
 
 }
+
+
+

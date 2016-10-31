@@ -2,8 +2,9 @@ package net.codealizer.thegradebook.data;
 
 import android.util.Pair;
 
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookActivity;
-import net.codealizer.thegradebook.apis.ic.xml.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
+import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
 import net.codealizer.thegradebook.assets.Grade;
 
 import java.util.ArrayList;
@@ -155,5 +156,38 @@ public class GradesManager {
         return rank;
     }
 
+    public static double calculateGrade(ArrayList<ClassbookGroup> groups) {
+        double finalGrade = 0;
+        double weight = 0d;
+
+
+        for (ClassbookGroup g : groups) {
+            double groupGrade = 0;
+            double totalPoints = 0;
+            weight += g.weight;
+
+            for (ClassbookActivity activity : g.activities) {
+
+                totalPoints += activity.getTotalPoints();
+                groupGrade += Double.parseDouble(activity.getScore());
+
+
+            }
+
+            finalGrade += ((groupGrade / totalPoints) * g.weight);
+        }
+
+        return finalGrade + (100 - weight);
+    }
+
+    public static boolean doWeightsAdd(ArrayList<ClassbookGroup> groups) {
+        double weights = 0d;
+
+        for (ClassbookGroup g : groups) {
+            weights += g.weight;
+        }
+
+        return weights == 100d;
+    }
 
 }

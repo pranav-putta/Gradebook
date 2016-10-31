@@ -91,7 +91,7 @@ public class TermCardParentViewHolder extends ParentViewHolder {
             });
         }
 
-        if (enabled) {
+        if (term.getChildItemList() != null && term.getChildItemList().size() > 1) {
             moreInfo.setEnabled(true);
             moreInfo.setTextColor(Color.parseColor("#1565C0"));
         } else {
