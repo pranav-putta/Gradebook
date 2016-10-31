@@ -80,7 +80,6 @@ public class UpdateResultReciever extends BroadcastReceiver {
                 SessionManager.saveNotifications(context, notifications);
             }
 
-
             Intent i = new Intent(context, UpdateService.class);
             context.startService(i);
         } catch (Exception ex) {
@@ -165,7 +164,6 @@ public class UpdateResultReciever extends BroadcastReceiver {
                         notifications = SessionManager.mCoreManager.retrieveNotifications();
                         if (notifications.getNotifications().size() > 5) {
                         }
-                        //SessionManager.saveNotifications(context, notifications);
                     } catch (SAXException | ParserConfigurationException | IOException e) {
                         success = false;
                     }

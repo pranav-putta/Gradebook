@@ -45,6 +45,8 @@ public class SessionManager {
      */
     public static PendingIntent pendingIntent;
 
+    public static boolean notificationsRead = false;
+
     /**
      * Creates and initializes static CoreManager by loading data from the application's
      * Shared Preferences
@@ -199,6 +201,7 @@ public class SessionManager {
 
             mCoreManager.setNotifications(notifications);
             mCoreManager.notifications = notifications;
+            notificationsRead = false;
         }
     }
 

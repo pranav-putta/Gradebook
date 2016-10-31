@@ -1,6 +1,7 @@
 package net.codealizer.thegradebook.ui.classbook;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import net.codealizer.thegradebook.R;
 import net.codealizer.thegradebook.apis.ic.Notifications;
@@ -215,6 +217,25 @@ public class MainActivity extends AppCompatActivity implements OnGradebookRetrie
             @Override
             public void onPageSelected(int position) {
                 MainActivity.this.mPosition = position;
+
+                if (mPosition == 1) {
+                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    try {
+                        for (StudentNotification notification : SessionManager.mCoreManager.getNotifications().getNotifications()) {
+                            int id;
+                            try {
+                                id = Integer.parseInt(notification.getNotificationID());
+                            } catch (NumberFormatException ex) {
+                                id = 0;
+                            }
+
+                            manager.cancel(id);
+                        }
+                    } catch (Exception ex) {
+                        Toast.makeText(MainActivity.this, "Couldn't load notifications :(", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
