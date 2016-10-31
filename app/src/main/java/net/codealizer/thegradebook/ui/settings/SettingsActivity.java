@@ -139,7 +139,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
+				//NavUtils.navigateUpFromSameTask(this);
+				super.onBackPressed();
 				finish();
 				break;
 		}
