@@ -129,6 +129,20 @@ public class PortalClassbook implements Serializable {
         return null;
     }
 
+    public int getNumberOfActivities() {
+        int number = 0;
+
+        try {
+            for (ClassbookActivity s : getClassbook().getActivities()) {
+                number++;
+            }
+        } catch (Exception ignore) {
+
+        }
+
+        return number;
+    }
+
     public static PortalClassbook find(String sectionID) {
         for (PortalClassbook classbook : SessionManager.mCoreManager.gradebookManager.portalclassbooks) {
             if (classbook.sectionID.equals(sectionID)) {

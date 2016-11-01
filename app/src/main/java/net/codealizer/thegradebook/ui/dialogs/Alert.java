@@ -26,6 +26,7 @@ import net.codealizer.thegradebook.apis.ic.RequestTask;
 import net.codealizer.thegradebook.apis.ic.StudentNotification;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.assets.BasicClassbookActivity;
 import net.codealizer.thegradebook.assets.BasicGradeDetail;
 import net.codealizer.thegradebook.assets.BasicTermDetail;
@@ -52,7 +53,7 @@ import java.util.List;
 
 public class Alert {
 
-    public static void showEBRGradeDialog(ArrayList<ClassbookTask> terms, Context context) {
+    public static void showEBRGradeDialog(ArrayList<ClassbookTask> terms, PortalClassbook classbook, Context context) {
 
         String grade;
         Spanned message;
@@ -62,7 +63,7 @@ public class Alert {
         builder.setPositiveButton("OK", null);
 
         try {
-            Grade g = (GradesManager.calculateEBR(terms));
+            Grade g = (GradesManager.calculateEBR(classbook, terms));
             if (g != Grade.UNKNOWN) {
                 grade = Grade.valueOf(g);
                 message = Html.fromHtml("You have a <strong>" + grade + "</strong> in this class.");

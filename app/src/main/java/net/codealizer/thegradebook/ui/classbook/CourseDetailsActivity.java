@@ -62,7 +62,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 break;
             case R.id.action_calculate_ebr:
                 if (mClassbook.isEBR())
-                    Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks((viewPager.getCurrentItem() + 1)), this);
+                    Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks((viewPager.getCurrentItem() + 1)), mClassbook, this);
                 break;
         }
 

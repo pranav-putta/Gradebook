@@ -5,6 +5,7 @@ import android.util.Pair;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookActivity;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookGroup;
 import net.codealizer.thegradebook.apis.ic.classbook.ClassbookTask;
+import net.codealizer.thegradebook.apis.ic.classbook.PortalClassbook;
 import net.codealizer.thegradebook.assets.Grade;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ import java.util.Comparator;
 
 public class GradesManager {
 
-    public static Grade calculateEBR(ArrayList<ClassbookTask> tasks) {
-        if (tasks.size() > 1) {
+    public static Grade calculateEBR(PortalClassbook classbook, ArrayList<ClassbookTask> tasks) {
+        if (tasks.size() > 1 && classbook.getNumberOfActivities() > 0) {
             ArrayList<Integer> averageProfScores = new ArrayList<>();
 
             for (ClassbookTask task : tasks) {

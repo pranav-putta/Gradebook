@@ -124,6 +124,18 @@ public class Classbook implements Serializable {
         return activities;
     }
 
+    public ArrayList<ClassbookActivity> getActivities() {
+        ArrayList<ClassbookActivity> activities = new ArrayList<>();
+
+        for (ClassbookTask g : tasks) {
+            for (ClassbookGroup group : g.groups) {
+                activities.addAll(group.activities);
+            }
+        }
+
+        return activities;
+    }
+
     public ArrayList<ClassbookTask> getTasks(int term) {
         ArrayList<ClassbookTask> tasks = new ArrayList<>();
 

@@ -57,7 +57,7 @@ public class CourseDetailSemesterFragment extends Fragment implements Expandable
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_calculate_ebr:
-                Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks(mPosition), getActivity());
+                Alert.showEBRGradeDialog(mClassbook.getClassbook().getTasks(mPosition), mClassbook, getActivity());
         }
 
         return true;
